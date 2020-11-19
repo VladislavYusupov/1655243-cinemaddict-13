@@ -1,7 +1,7 @@
 # Проект «Киноман» [![Build status][travis-image]][travis-url]
 
 * Студент: [Владислав Эдуардович](https://up.htmlacademy.ru/ecmascript/13/user/1655243).
-* Наставник: `Неизвестно`.
+* Наставник: [Олег Скляров](https://htmlacademy.ru/profile/id926687).
 
 ---
 
