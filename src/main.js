@@ -76,6 +76,7 @@ render(
   siteElements.main,
   createFilmsTemplate(createFilmList(filmListOptions.main.maxCount))
 );
+
 render(siteElements.filmsList, createShowMoreButtonTemplate());
 
 render(
@@ -85,6 +86,7 @@ render(
     createFilmList(filmListOptions.extra.maxCount)
   )
 );
+
 render(
   siteElements.films,
   createFilmsListExtraTemplate(
