@@ -9,44 +9,23 @@ import { createFilmsListExtraTemplate } from "./view/films-list-extra";
 import { createFooterStatisticTemplate } from "./view/footer-statistic";
 import { createPopupTemplate } from "./view/popup";
 
-const siteBody = document.body;
+const HEADER_ELEMENT = document.querySelector(`.header`);
+const MAIN_ELEMENT = document.querySelector(`.main`);
+const FOOTER_ELEMENT = document.querySelector(`footer`);
+const FOOTER_STATISTICS_ELEMENT = FOOTER_ELEMENT.querySelector(
+  `.footer__statistics`
+);
 
-const selectors = {
-  classes: {
-    header: `.header`,
-    main: `.main`,
-    footer: `footer`,
-    films: `.films`,
-    filmsList: `.films-list`,
-    footerStatistics: `.footer__statistics`,
-  },
-};
-
-const siteElements = {
-  header: siteBody.querySelector(selectors.classes.header),
-  main: siteBody.querySelector(selectors.classes.main),
-  footer: siteBody.querySelector(selectors.classes.footer),
-  get films() {
-    return this.main.querySelector(selectors.classes.films);
-  },
-  get filmsList() {
-    return this.main.querySelector(selectors.classes.filmsList);
-  },
-  get footerStatistics() {
-    return this.footer.querySelector(selectors.classes.footerStatistics);
-  },
-};
-
-const filmListOptions = {
+const FILM_LIST_OPTIONS = {
   main: {
     maxCount: 5,
   },
   extra: {
     topRated: {
-      name: "Top rated",
+      name: `Top rated`,
     },
     mostComment: {
-      name: "Most comment",
+      name: `Most comment`,
     },
     maxCount: 2,
   },
@@ -66,34 +45,37 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(siteElements.header, createProfileTemplate());
+render(HEADER_ELEMENT, createProfileTemplate());
 
-render(siteElements.main, createMenuNavigationTemplate());
-render(siteElements.main, createSortTemplate());
-render(siteElements.main, createStatisticTemplate());
+render(MAIN_ELEMENT, createMenuNavigationTemplate());
+render(MAIN_ELEMENT, createSortTemplate());
+render(MAIN_ELEMENT, createStatisticTemplate());
 
 render(
-  siteElements.main,
-  createFilmsTemplate(createFilmList(filmListOptions.main.maxCount))
+  MAIN_ELEMENT,
+  createFilmsTemplate(createFilmList(FILM_LIST_OPTIONS.main.maxCount))
 );
 
-render(siteElements.filmsList, createShowMoreButtonTemplate());
+const FILMS_ELEMENT = MAIN_ELEMENT.querySelector(`.films`);
+const FILMS_LIST_ELEMENT = MAIN_ELEMENT.querySelector(`.films-list`);
+
+render(FILMS_LIST_ELEMENT, createShowMoreButtonTemplate());
 
 render(
-  siteElements.films,
+  FILMS_ELEMENT,
   createFilmsListExtraTemplate(
-    filmListOptions.extra.topRated.name,
-    createFilmList(filmListOptions.extra.maxCount)
+    FILM_LIST_OPTIONS.extra.topRated.name,
+    createFilmList(FILM_LIST_OPTIONS.extra.maxCount)
   )
 );
 
 render(
-  siteElements.films,
+  FILMS_ELEMENT,
   createFilmsListExtraTemplate(
-    filmListOptions.extra.mostComment.name,
-    createFilmList(filmListOptions.extra.maxCount)
+    FILM_LIST_OPTIONS.extra.mostComment.name,
+    createFilmList(FILM_LIST_OPTIONS.extra.maxCount)
   )
 );
 
-render(siteElements.footerStatistics, createFooterStatisticTemplate());
-render(siteElements.footer, createPopupTemplate(), `afterend`);
+render(FOOTER_STATISTICS_ELEMENT, createFooterStatisticTemplate());
+render(FOOTER_ELEMENT, createPopupTemplate(), `afterend`);
