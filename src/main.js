@@ -9,14 +9,14 @@ import { createFilmsListExtraTemplate } from "./view/films-list-extra";
 import { createFooterStatisticTemplate } from "./view/footer-statistic";
 import { createPopupTemplate } from "./view/popup";
 
-const HEADER_ELEMENT = document.querySelector(`.header`);
-const MAIN_ELEMENT = document.querySelector(`.main`);
-const FOOTER_ELEMENT = document.querySelector(`footer`);
-const FOOTER_STATISTICS_ELEMENT = FOOTER_ELEMENT.querySelector(
+const headerElement = document.querySelector(`.header`);
+const mainElement = document.querySelector(`.main`);
+const footerElement = document.querySelector(`footer`);
+const footerStatisticsElement = footerElement.querySelector(
   `.footer__statistics`
 );
 
-const FILM_LIST_OPTIONS = {
+const filmListOptions = {
   main: {
     maxCount: 5,
   },
@@ -45,37 +45,37 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(HEADER_ELEMENT, createProfileTemplate());
+render(headerElement, createProfileTemplate());
 
-render(MAIN_ELEMENT, createMenuNavigationTemplate());
-render(MAIN_ELEMENT, createSortTemplate());
-render(MAIN_ELEMENT, createStatisticTemplate());
+render(mainElement, createMenuNavigationTemplate());
+render(mainElement, createSortTemplate());
+render(mainElement, createStatisticTemplate());
 
 render(
-  MAIN_ELEMENT,
-  createFilmsTemplate(createFilmList(FILM_LIST_OPTIONS.main.maxCount))
+  mainElement,
+  createFilmsTemplate(createFilmList(filmListOptions.main.maxCount))
 );
 
-const FILMS_ELEMENT = MAIN_ELEMENT.querySelector(`.films`);
-const FILMS_LIST_ELEMENT = MAIN_ELEMENT.querySelector(`.films-list`);
+const filmsElement = mainElement.querySelector(`.films`);
+const filmsListElement = mainElement.querySelector(`.films-list`);
 
-render(FILMS_LIST_ELEMENT, createShowMoreButtonTemplate());
+render(filmsListElement, createShowMoreButtonTemplate());
 
 render(
-  FILMS_ELEMENT,
+  filmsElement,
   createFilmsListExtraTemplate(
-    FILM_LIST_OPTIONS.extra.topRated.name,
-    createFilmList(FILM_LIST_OPTIONS.extra.maxCount)
+    filmListOptions.extra.topRated.name,
+    createFilmList(filmListOptions.extra.maxCount)
   )
 );
 
 render(
-  FILMS_ELEMENT,
+  filmsElement,
   createFilmsListExtraTemplate(
-    FILM_LIST_OPTIONS.extra.mostComment.name,
-    createFilmList(FILM_LIST_OPTIONS.extra.maxCount)
+    filmListOptions.extra.mostComment.name,
+    createFilmList(filmListOptions.extra.maxCount)
   )
 );
 
-render(FOOTER_STATISTICS_ELEMENT, createFooterStatisticTemplate());
-render(FOOTER_ELEMENT, createPopupTemplate(), `afterend`);
+render(footerStatisticsElement, createFooterStatisticTemplate());
+render(footerElement, createPopupTemplate(), `afterend`);
