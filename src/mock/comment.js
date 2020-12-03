@@ -39,16 +39,18 @@ const generateDate = () => {
     `2000/01/01 00:01`,
   ];
 
-  return authors[getRandomInteger(0, dates.length - 1)];
+  return dates[getRandomInteger(0, dates.length - 1)];
 };
 
 export const generateComments = (minCommentCount, maxCommentCount) => {
   return new Array(getRandomInteger(minCommentCount, maxCommentCount))
     .fill()
-    .map({
-      message: generateMessage(),
-      emoji: generateEmoji(),
-      author: generateAuthor(),
-      date: generateDate(),
+    .map(() => {
+      return {
+        message: generateMessage(),
+        emoji: generateEmoji(),
+        author: generateAuthor(),
+        date: generateDate(),
+      };
     });
 };

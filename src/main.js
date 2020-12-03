@@ -8,6 +8,10 @@ import { createShowMoreButtonTemplate } from "./view/show-more-button";
 import { createFilmsListExtraTemplate } from "./view/films-list-extra";
 import { createFooterStatisticTemplate } from "./view/footer-statistic";
 import { createPopupTemplate } from "./view/popup";
+import { generateFilm } from "./mock/film";
+
+const FILMS_COUNT = 20;
+const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -18,7 +22,7 @@ const footerStatisticsElement = footerElement.querySelector(
 
 const filmListOptions = {
   main: {
-    maxCount: 5,
+    maxCount: 20,
   },
   extra: {
     topRated: {
@@ -31,12 +35,13 @@ const filmListOptions = {
   },
 };
 
-const createFilmList = (count) => {
+const createFilmList = (films, quantity) => {
   let filmsList = ``;
+  films = films.slice(0, quantity);
 
-  for (let i = 0; i < count; i++) {
-    filmsList += createCardTemplate();
-  }
+  films.forEach((film) => {
+    filmsList += createCardTemplate(film);
+  });
 
   return filmsList;
 };
@@ -53,7 +58,7 @@ render(mainElement, createStatisticTemplate());
 
 render(
   mainElement,
-  createFilmsTemplate(createFilmList(filmListOptions.main.maxCount))
+  createFilmsTemplate(createFilmList(films, filmListOptions.main.maxCount))
 );
 
 const filmsElement = mainElement.querySelector(`.films`);
@@ -65,7 +70,7 @@ render(
   filmsElement,
   createFilmsListExtraTemplate(
     filmListOptions.extra.topRated.name,
-    createFilmList(filmListOptions.extra.maxCount)
+    createFilmList(films, filmListOptions.extra.maxCount)
   )
 );
 
@@ -73,7 +78,7 @@ render(
   filmsElement,
   createFilmsListExtraTemplate(
     filmListOptions.extra.mostComment.name,
-    createFilmList(filmListOptions.extra.maxCount)
+    createFilmList(films, filmListOptions.extra.maxCount)
   )
 );
 
