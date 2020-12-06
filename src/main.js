@@ -11,23 +11,10 @@ import { createPopupTemplate } from "./view/popup";
 import { generateFilm } from "./mock/film";
 import { generateUser } from "./mock/user";
 
-const FILMS_COUNT = 20;
-const MAX_FILMS_PER_LINE = 5;
-let renderedFilms = 0;
-
-const films = new Array(FILMS_COUNT).fill().map(generateFilm);
-const user = generateUser();
-
-const headerElement = document.querySelector(`.header`);
-const mainElement = document.querySelector(`.main`);
-const footerElement = document.querySelector(`footer`);
-const footerStatisticsElement = footerElement.querySelector(
-  `.footer__statistics`
-);
-
 const filmListOptions = {
   main: {
     maxCount: 20,
+    maxFilmsPerLine: 5,
   },
   extra: {
     topRated: {
@@ -40,16 +27,17 @@ const filmListOptions = {
   },
 };
 
-const createFilmList = (films, quantity) => {
-  let filmsList = ``;
-  films = films.slice(0, quantity);
+let renderedFilms = 0;
 
-  films.forEach((film) => {
-    filmsList += createCardTemplate(film);
-  });
+const films = new Array(filmListOptions.main.maxCount).fill().map(generateFilm);
+const user = generateUser();
 
-  return filmsList;
-};
+const headerElement = document.querySelector(`.header`);
+const mainElement = document.querySelector(`.main`);
+const footerElement = document.querySelector(`footer`);
+const footerStatisticsElement = footerElement.querySelector(
+  `.footer__statistics`
+);
 
 const renderFilms = (films) => {
   const filmsListContainerElement = mainElement.querySelector(
@@ -58,12 +46,35 @@ const renderFilms = (films) => {
 
   if (renderedFilms < films.length) {
     films
-      .slice(renderedFilms, renderedFilms + MAX_FILMS_PER_LINE)
+      .slice(
+        renderedFilms,
+        renderedFilms + filmListOptions.main.maxFilmsPerLine
+      )
       .forEach((film) => {
         render(filmsListContainerElement, createCardTemplate(film));
         renderedFilms++;
       });
   }
+};
+
+const getTopRatedFilms = (films) => {
+  return films
+    .sort(({ rating: a }, { rating: b }) => {
+      return b - a;
+    })
+    .slice(0, filmListOptions.extra.maxCount);
+};
+
+const getMostCommentedFilms = (films) => {
+  return films
+    .sort(({ comments: a }, { comments: b }) => {
+      return b.length - a.length;
+    })
+    .slice(0, filmListOptions.extra.maxCount);
+};
+
+const createFilmCards = (films) => {
+  return films.map((film) => createCardTemplate(film));
 };
 
 const render = (container, template, place = `beforeend`) => {
@@ -100,7 +111,7 @@ render(
   filmsElement,
   createFilmsListExtraTemplate(
     filmListOptions.extra.topRated.name,
-    createFilmList(films, filmListOptions.extra.maxCount)
+    createFilmCards(getTopRatedFilms(films))
   )
 );
 
@@ -108,7 +119,7 @@ render(
   filmsElement,
   createFilmsListExtraTemplate(
     filmListOptions.extra.mostComment.name,
-    createFilmList(films, filmListOptions.extra.maxCount)
+    createFilmCards(getMostCommentedFilms(films))
   )
 );
 
