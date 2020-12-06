@@ -27,7 +27,7 @@ const filmListOptions = {
   },
 };
 
-let renderedFilms = 0;
+let filmsRenderedNumber = 0;
 
 const films = new Array(filmListOptions.main.maxCount).fill().map(generateFilm);
 const user = generateUser();
@@ -39,20 +39,20 @@ const footerStatisticsElement = footerElement.querySelector(
   `.footer__statistics`
 );
 
-const renderFilms = (films) => {
+const renderFilmsRow = (films) => {
   const filmsListContainerElement = mainElement.querySelector(
     `.films-list__container`
   );
 
-  if (renderedFilms < films.length) {
+  if (filmsRenderedNumber < films.length) {
     films
       .slice(
-        renderedFilms,
-        renderedFilms + filmListOptions.main.maxFilmsPerLine
+        filmsRenderedNumber,
+        filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine
       )
       .forEach((film) => {
         render(filmsListContainerElement, createCardTemplate(film));
-        renderedFilms++;
+        filmsRenderedNumber++;
       });
   }
 };
@@ -74,7 +74,11 @@ const getMostCommentedFilms = (films) => {
 };
 
 const createFilmCards = (films) => {
-  return films.map((film) => createCardTemplate(film));
+  let filmCards = ``;
+
+  films.forEach((film) => (filmCards += createCardTemplate(film)));
+
+  return filmCards;
 };
 
 const render = (container, template, place = `beforeend`) => {
@@ -88,20 +92,20 @@ render(mainElement, createSortTemplate());
 render(mainElement, createStatisticTemplate());
 
 render(mainElement, createFilmsTemplate());
-renderFilms(films);
+renderFilmsRow(films);
 
 const filmsElement = mainElement.querySelector(`.films`);
 const filmsListElement = mainElement.querySelector(`.films-list`);
 
-if (renderedFilms < films.length) {
+if (filmsRenderedNumber < films.length) {
   render(filmsListElement, createShowMoreButtonTemplate());
   const showButton = filmsListElement.querySelector(`.films-list__show-more`);
 
   showButton.addEventListener(`click`, (event) => {
     event.preventDefault();
-    renderFilms(films);
+    renderFilmsRow(films);
 
-    if (renderedFilms === films.length) {
+    if (filmsRenderedNumber === films.length) {
       showButton.remove();
     }
   });

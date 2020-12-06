@@ -6,6 +6,9 @@ export const generateTitle = () => {
     `Popeye meets sinbad`,
     `Sagebrush trail`,
     `Santa claus conquers the martians`,
+    `The dance of life`,
+    `The great flamarion`,
+    `The man with the golden arm`,
   ];
 
   return titles[getRandomInteger(0, titles.length - 1)];

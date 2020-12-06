@@ -2,8 +2,11 @@ import { getRandomInteger } from "../helpers/mockGenerateHelper";
 import { generateComments } from "./comment";
 import { generateTitle } from "./common";
 
-const MAX_COMMENT_COUNT = 5;
 const MIN_COMMENT_COUNT = 0;
+const MAX_COMMENT_COUNT = 5;
+const MIN_SENTENCES_IN_DESCRIPTION = 1;
+const MAX_SENTENCES_IN_DESCRIPTION = 5;
+const FRACTIONAL_CHARACTERS_NUMBER_IN_RATING = 1;
 const MAX_RATING = 10;
 
 const generatePoster = (title) => {
@@ -12,6 +15,9 @@ const generatePoster = (title) => {
     `popeye-meets-sinbad.png`,
     `sagebrush-trail.jpg`,
     `santa-claus-conquers-the-martians.jpg`,
+    `the-dance-of-life.jpg`,
+    `the-great-flamarion.jpg`,
+    `the-man-with-the-golden-arm.jpg`,
   ];
 
   return posters.find((poster) =>
@@ -34,7 +40,7 @@ const generateDescription = () => {
     `In rutrum ac purus sit amet tempus.`,
   ];
 
-  const sentencesNumber = getRandomInteger(1, 5);
+  const sentencesNumber = getRandomInteger(MIN_SENTENCES_IN_DESCRIPTION, MAX_SENTENCES_IN_DESCRIPTION);
   let description = ``;
   const space = ` `;
 
@@ -51,7 +57,7 @@ const generateDescription = () => {
 };
 
 const generateRating = () => {
-  return (Math.random() * MAX_RATING).toFixed(1);
+  return (Math.random() * MAX_RATING).toFixed(FRACTIONAL_CHARACTERS_NUMBER_IN_RATING);
 };
 
 export const generateFilm = () => {
