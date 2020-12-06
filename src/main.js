@@ -12,6 +12,9 @@ import { generateFilm } from "./mock/film";
 import { generateUser } from "./mock/user";
 
 const FILMS_COUNT = 20;
+const MAX_FILMS_PER_LINE = 5;
+let renderedFilms = 0;
+
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
 const user = generateUser();
 
@@ -48,6 +51,21 @@ const createFilmList = (films, quantity) => {
   return filmsList;
 };
 
+const renderFilms = (films) => {
+  const filmsListContainerElement = mainElement.querySelector(
+    `.films-list__container`
+  );
+
+  if (renderedFilms < films.length) {
+    films
+      .slice(renderedFilms, renderedFilms + MAX_FILMS_PER_LINE)
+      .forEach((film) => {
+        render(filmsListContainerElement, createCardTemplate(film));
+        renderedFilms++;
+      });
+  }
+};
+
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
@@ -58,15 +76,25 @@ render(mainElement, createMenuNavigationTemplate(user));
 render(mainElement, createSortTemplate());
 render(mainElement, createStatisticTemplate());
 
-render(
-  mainElement,
-  createFilmsTemplate(createFilmList(films, filmListOptions.main.maxCount))
-);
+render(mainElement, createFilmsTemplate());
+renderFilms(films);
 
 const filmsElement = mainElement.querySelector(`.films`);
 const filmsListElement = mainElement.querySelector(`.films-list`);
 
-render(filmsListElement, createShowMoreButtonTemplate());
+if (renderedFilms < films.length) {
+  render(filmsListElement, createShowMoreButtonTemplate());
+  const showButton = filmsListElement.querySelector(`.films-list__show-more`);
+
+  showButton.addEventListener(`click`, (event) => {
+    event.preventDefault();
+    renderFilms(films);
+
+    if (renderedFilms === films.length) {
+      showButton.remove();
+    }
+  });
+}
 
 render(
   filmsElement,
