@@ -1,20 +1,10 @@
 import { getRandomInteger } from "../helpers/mockGenerateHelper";
 import { generateComments } from "./comment";
+import { generateTitle } from "./common";
 
 const MAX_COMMENT_COUNT = 5;
 const MIN_COMMENT_COUNT = 0;
 const MAX_RATING = 10;
-
-const generateTitle = () => {
-  const titles = [
-    `Made for each other`,
-    `Popeye meets sinbad`,
-    `Sagebrush trail`,
-    `Santa claus conquers the martians`,
-  ];
-
-  return titles[getRandomInteger(0, titles.length - 1)];
-};
 
 const generatePoster = (title) => {
   const posters = [

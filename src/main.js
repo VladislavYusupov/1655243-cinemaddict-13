@@ -9,9 +9,11 @@ import { createFilmsListExtraTemplate } from "./view/films-list-extra";
 import { createFooterStatisticTemplate } from "./view/footer-statistic";
 import { createPopupTemplate } from "./view/popup";
 import { generateFilm } from "./mock/film";
+import { generateUser } from "./mock/user";
 
 const FILMS_COUNT = 20;
 const films = new Array(FILMS_COUNT).fill().map(generateFilm);
+const user = generateUser();
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -50,9 +52,9 @@ const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(headerElement, createProfileTemplate());
+render(headerElement, createProfileTemplate(user));
 
-render(mainElement, createMenuNavigationTemplate());
+render(mainElement, createMenuNavigationTemplate(user));
 render(mainElement, createSortTemplate());
 render(mainElement, createStatisticTemplate());
 
