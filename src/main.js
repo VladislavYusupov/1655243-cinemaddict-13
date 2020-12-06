@@ -123,5 +123,5 @@ render(
   )
 );
 
-render(footerStatisticsElement, createFooterStatisticTemplate());
+render(footerStatisticsElement, createFooterStatisticTemplate(films));
 render(footerElement, createPopupTemplate(films[0]), `afterend`);
