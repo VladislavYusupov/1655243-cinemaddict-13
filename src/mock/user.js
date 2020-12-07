@@ -1,5 +1,5 @@
 import getRandomInteger from "../helpers/mockGenerateHelper";
-import { generateTitle } from "./common";
+import {generateTitle} from "./common";
 
 const USER_RANKS = new Map([
   [21, `movie buff`],

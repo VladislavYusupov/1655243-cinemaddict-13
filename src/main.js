@@ -1,15 +1,15 @@
-import { createProfileTemplate } from "./view/profile";
-import { createMenuNavigationTemplate } from "./view/menu-navigation";
-import { createSortTemplate } from "./view/sort";
-import { createStatisticTemplate } from "./view/statistic";
-import { createFilmsTemplate } from "./view/films";
-import { createCardTemplate } from "./view/film-card";
-import { createShowMoreButtonTemplate } from "./view/show-more-button";
-import { createFilmsListExtraTemplate } from "./view/films-list-extra";
-import { createFooterStatisticTemplate } from "./view/footer-statistic";
-import { createPopupTemplate } from "./view/popup";
-import { generateFilm } from "./mock/film";
-import { generateUser } from "./mock/user";
+import {createProfileTemplate} from "./view/profile";
+import {createMenuNavigationTemplate} from "./view/menu-navigation";
+import {createSortTemplate} from "./view/sort";
+import {createStatisticTemplate} from "./view/statistic";
+import {createFilmsTemplate} from "./view/films";
+import {createCardTemplate} from "./view/film-card";
+import {createShowMoreButtonTemplate} from "./view/show-more-button";
+import {createFilmsListExtraTemplate} from "./view/films-list-extra";
+import {createFooterStatisticTemplate} from "./view/footer-statistic";
+import {createPopupTemplate} from "./view/popup";
+import {generateFilm} from "./mock/film";
+import {generateUser} from "./mock/user";
 
 const filmListOptions = {
   main: {
@@ -35,20 +35,18 @@ const user = generateUser();
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`footer`);
-const footerStatisticsElement = footerElement.querySelector(
-  `.footer__statistics`
-);
+const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 const renderFilmsRow = (films) => {
   const filmsListContainerElement = mainElement.querySelector(
-    `.films-list__container`
+      `.films-list__container`,
   );
 
   if (filmsRenderedNumber < films.length) {
     films
       .slice(
         filmsRenderedNumber,
-        filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine
+        filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine,
       )
       .forEach((film) => {
         render(filmsListContainerElement, createCardTemplate(film));
@@ -59,7 +57,7 @@ const renderFilmsRow = (films) => {
 
 const getTopRatedFilms = (films) => {
   return films
-    .sort(({ rating: a }, { rating: b }) => {
+    .sort(({rating: a}, {rating: b}) => {
       return b - a;
     })
     .slice(0, filmListOptions.extra.maxCount);
@@ -67,7 +65,7 @@ const getTopRatedFilms = (films) => {
 
 const getMostCommentedFilms = (films) => {
   return films
-    .sort(({ comments: a }, { comments: b }) => {
+    .sort(({comments: a}, {comments: b}) => {
       return b.length - a.length;
     })
     .slice(0, filmListOptions.extra.maxCount);
@@ -115,16 +113,16 @@ render(
   filmsElement,
   createFilmsListExtraTemplate(
     filmListOptions.extra.topRated.name,
-    createFilmCards(getTopRatedFilms(films))
-  )
+    createFilmCards(getTopRatedFilms(films)),
+  ),
 );
 
 render(
   filmsElement,
   createFilmsListExtraTemplate(
     filmListOptions.extra.mostComment.name,
-    createFilmCards(getMostCommentedFilms(films))
-  )
+    createFilmCards(getMostCommentedFilms(films)),
+  ),
 );
 
 render(footerStatisticsElement, createFooterStatisticTemplate(films));

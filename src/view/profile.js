@@ -1,4 +1,4 @@
-export const createProfileTemplate = ({ rank }) => {
+export const createProfileTemplate = ({rank}) => {
   return `
     <section class="header__profile profile">
       <p class="profile__rating">${rank ? rank : ``}</p>

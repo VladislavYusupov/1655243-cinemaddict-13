@@ -1,6 +1,6 @@
 import getRandomInteger from "../helpers/mockGenerateHelper";
 import generateComments from "./comment";
-import { generateTitle } from "./common";
+import {generateTitle} from "./common";
 
 const MIN_COMMENT_COUNT = 0;
 const MAX_COMMENT_COUNT = 5;
@@ -21,7 +21,7 @@ const generatePoster = (title) => {
   ];
 
   return posters.find((poster) =>
-    poster.startsWith(title.toLowerCase().replaceAll(` `, `-`))
+    poster.startsWith(title.toLowerCase().replaceAll(` `, `-`)),
   );
 };
 
@@ -42,7 +42,7 @@ const generateDescription = () => {
 
   const sentencesNumber = getRandomInteger(
     MIN_SENTENCES_IN_DESCRIPTION,
-    MAX_SENTENCES_IN_DESCRIPTION
+    MAX_SENTENCES_IN_DESCRIPTION,
   );
   let description = ``;
   const space = ` `;
@@ -61,7 +61,7 @@ const generateDescription = () => {
 
 const generateRating = () => {
   return (Math.random() * MAX_RATING).toFixed(
-    FRACTIONAL_CHARACTERS_NUMBER_IN_RATING
+    FRACTIONAL_CHARACTERS_NUMBER_IN_RATING,
   );
 };
 

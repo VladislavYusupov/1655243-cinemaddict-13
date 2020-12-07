@@ -2,14 +2,14 @@ const createComments = (comments) => {
   let commentsList = [];
 
   for (let comment of comments) {
-    const popusComment = createPopupCommentsTemplate(comment);    
+    const popusComment = createPopupCommentsTemplate(comment);
     commentsList.push(popusComment);
   }
 
   return commentsList.join(``);
 };
 
-const createPopupCommentsTemplate = ({ message, emoji, author, date }) => {
+const createPopupCommentsTemplate = ({message, emoji, author, date}) => {
   return `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">

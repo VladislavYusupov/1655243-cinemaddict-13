@@ -7,10 +7,10 @@ export const createCardTemplate = ({
 }) => {
   const DESCRIPTION_MAX_LENGTH = 140;
 
-  const limitDescription = (description) => {
-    return description.length > DESCRIPTION_MAX_LENGTH
-      ? `${description.slice(0, DESCRIPTION_MAX_LENGTH - 1)}...`
-      : description;
+  const limitDescription = (text) => {
+    return text.length > DESCRIPTION_MAX_LENGTH
+      ? `${text.slice(0, DESCRIPTION_MAX_LENGTH - 1)}...`
+      : text;
   };
 
   return `
