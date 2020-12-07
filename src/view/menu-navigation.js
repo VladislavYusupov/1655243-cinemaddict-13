@@ -1,8 +1,4 @@
-export const createMenuNavigationTemplate = ({
-  watchList,
-  history,
-  favorites,
-}) => {
+export const createMenuNavigationTemplate = ({watchList, history, favorites}) => {
   return `
     <nav class="main-navigation">
       <div class="main-navigation__items">

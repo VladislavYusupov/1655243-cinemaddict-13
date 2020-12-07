@@ -20,9 +20,7 @@ const generatePoster = (title) => {
     `the-man-with-the-golden-arm.jpg`,
   ];
 
-  return posters.find((poster) =>
-    poster.startsWith(title.toLowerCase().replaceAll(` `, `-`)),
-  );
+  return posters.find((poster) => poster.startsWith(title.toLowerCase().replaceAll(` `, `-`)));
 };
 
 const generateDescription = () => {
@@ -40,10 +38,7 @@ const generateDescription = () => {
     `In rutrum ac purus sit amet tempus.`,
   ];
 
-  const sentencesNumber = getRandomInteger(
-    MIN_SENTENCES_IN_DESCRIPTION,
-    MAX_SENTENCES_IN_DESCRIPTION,
-  );
+  const sentencesNumber = getRandomInteger(MIN_SENTENCES_IN_DESCRIPTION, MAX_SENTENCES_IN_DESCRIPTION);
   let description = ``;
   const space = ` `;
 
@@ -60,16 +55,14 @@ const generateDescription = () => {
 };
 
 const generateRating = () => {
-  return (Math.random() * MAX_RATING).toFixed(
-    FRACTIONAL_CHARACTERS_NUMBER_IN_RATING,
-  );
+  return (Math.random() * MAX_RATING).toFixed(FRACTIONAL_CHARACTERS_NUMBER_IN_RATING);
 };
 
 export const generateFilm = () => {
   const title = generateTitle();
 
   return {
-    title: title,
+    title,
     poster: generatePoster(title),
     description: generateDescription(),
     rating: generateRating(),

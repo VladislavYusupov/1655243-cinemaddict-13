@@ -1,10 +1,4 @@
-export const createCardTemplate = ({
-  title,
-  poster,
-  description,
-  rating,
-  comments,
-}) => {
+export const createCardTemplate = ({title, poster, description, rating, comments}) => {
   const DESCRIPTION_MAX_LENGTH = 140;
 
   const limitDescription = (text) => {

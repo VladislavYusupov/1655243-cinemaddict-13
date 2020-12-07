@@ -37,17 +37,12 @@ const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-const renderFilmsRow = (films) => {
-  const filmsListContainerElement = mainElement.querySelector(
-      `.films-list__container`,
-  );
+const renderFilmsRow = () => {
+  const filmsListContainerElement = mainElement.querySelector(`.films-list__container`);
 
   if (filmsRenderedNumber < films.length) {
     films
-      .slice(
-        filmsRenderedNumber,
-        filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine,
-      )
+      .slice(filmsRenderedNumber, filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine)
       .forEach((film) => {
         render(filmsListContainerElement, createCardTemplate(film));
         filmsRenderedNumber++;
@@ -55,26 +50,26 @@ const renderFilmsRow = (films) => {
   }
 };
 
-const getTopRatedFilms = (films) => {
-  return films
+const getTopRatedFilms = (movies) => {
+  return movies
     .sort(({rating: a}, {rating: b}) => {
       return b - a;
     })
     .slice(0, filmListOptions.extra.maxCount);
 };
 
-const getMostCommentedFilms = (films) => {
-  return films
+const getMostCommentedFilms = (movies) => {
+  return movies
     .sort(({comments: a}, {comments: b}) => {
       return b.length - a.length;
     })
     .slice(0, filmListOptions.extra.maxCount);
 };
 
-const createFilmCards = (films) => {
+const createFilmCards = (movies) => {
   let filmCards = ``;
 
-  films.forEach((film) => (filmCards += createCardTemplate(film)));
+  movies.forEach((movie) => (filmCards += createCardTemplate(movie)));
 
   return filmCards;
 };
@@ -109,21 +104,8 @@ if (filmsRenderedNumber < films.length) {
   });
 }
 
-render(
-  filmsElement,
-  createFilmsListExtraTemplate(
-    filmListOptions.extra.topRated.name,
-    createFilmCards(getTopRatedFilms(films)),
-  ),
-);
-
-render(
-  filmsElement,
-  createFilmsListExtraTemplate(
-    filmListOptions.extra.mostComment.name,
-    createFilmCards(getMostCommentedFilms(films)),
-  ),
-);
+render(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.topRated.name, createFilmCards(getTopRatedFilms(films))));
+render(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.mostComment.name, createFilmCards(getMostCommentedFilms(films))));
 
 render(footerStatisticsElement, createFooterStatisticTemplate(films));
 render(footerElement, createPopupTemplate(films[0]), `afterend`);
