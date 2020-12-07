@@ -1,4 +1,4 @@
-import { getRandomInteger } from "../helpers/mockGenerateHelper";
+import getRandomInteger from "../helpers/mockGenerateHelper";
 
 export const generateTitle = () => {
   const titles = [

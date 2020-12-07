@@ -1,4 +1,4 @@
-const { getRandomInteger } = require("../helpers/mockGenerateHelper");
+import getRandomInteger from "../helpers/mockGenerateHelper";
 
 const generateMessage = () => {
   const messages = [
@@ -42,7 +42,7 @@ const generateDate = () => {
   return dates[getRandomInteger(0, dates.length - 1)];
 };
 
-export const generateComments = (minCommentCount, maxCommentCount) => {
+const generateComments = (minCommentCount, maxCommentCount) => {
   return new Array(getRandomInteger(minCommentCount, maxCommentCount))
     .fill()
     .map(() => {
@@ -54,3 +54,5 @@ export const generateComments = (minCommentCount, maxCommentCount) => {
       };
     });
 };
+
+export default generateComments;

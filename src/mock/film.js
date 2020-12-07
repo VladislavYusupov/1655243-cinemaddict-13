@@ -1,5 +1,5 @@
-import { getRandomInteger } from "../helpers/mockGenerateHelper";
-import { generateComments } from "./comment";
+import getRandomInteger from "../helpers/mockGenerateHelper";
+import generateComments from "./comment";
 import { generateTitle } from "./common";
 
 const MIN_COMMENT_COUNT = 0;
@@ -40,7 +40,10 @@ const generateDescription = () => {
     `In rutrum ac purus sit amet tempus.`,
   ];
 
-  const sentencesNumber = getRandomInteger(MIN_SENTENCES_IN_DESCRIPTION, MAX_SENTENCES_IN_DESCRIPTION);
+  const sentencesNumber = getRandomInteger(
+    MIN_SENTENCES_IN_DESCRIPTION,
+    MAX_SENTENCES_IN_DESCRIPTION
+  );
   let description = ``;
   const space = ` `;
 
@@ -57,7 +60,9 @@ const generateDescription = () => {
 };
 
 const generateRating = () => {
-  return (Math.random() * MAX_RATING).toFixed(FRACTIONAL_CHARACTERS_NUMBER_IN_RATING);
+  return (Math.random() * MAX_RATING).toFixed(
+    FRACTIONAL_CHARACTERS_NUMBER_IN_RATING
+  );
 };
 
 export const generateFilm = () => {

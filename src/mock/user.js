@@ -1,4 +1,4 @@
-import { getRandomInteger } from "../helpers/mockGenerateHelper";
+import getRandomInteger from "../helpers/mockGenerateHelper";
 import { generateTitle } from "./common";
 
 const USER_RANKS = new Map([
