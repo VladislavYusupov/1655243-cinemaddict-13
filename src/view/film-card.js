@@ -1,12 +1,4 @@
-export const createCardTemplate = ({title, poster, description, rating, comments}) => {
-  const DESCRIPTION_MAX_LENGTH = 140;
-
-  const limitDescription = (text) => {
-    return text.length > DESCRIPTION_MAX_LENGTH
-      ? `${text.slice(0, DESCRIPTION_MAX_LENGTH - 1)}...`
-      : text;
-  };
-
+export const createCardTemplate = ({title, poster, shortDescription, rating, comments}) => {
   return `
     <article class="film-card">
       <h3 class="film-card__title">${title}</h3>
@@ -17,7 +9,7 @@ export const createCardTemplate = ({title, poster, description, rating, comments
         <span class="film-card__genre">Musical</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
-      <p class="film-card__description">${limitDescription(description)}</p>
+      <p class="film-card__description">${shortDescription}</p>
       <a class="film-card__comments">${comments.length} comments</a>
       <div class="film-card__controls">
         <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>

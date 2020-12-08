@@ -94,8 +94,8 @@ if (filmsRenderedNumber < films.length) {
   render(filmsListElement, createShowMoreButtonTemplate());
   const showButton = filmsListElement.querySelector(`.films-list__show-more`);
 
-  showButton.addEventListener(`click`, (event) => {
-    event.preventDefault();
+  showButton.addEventListener(`click`, (e) => {
+    e.preventDefault();
     renderFilmsRow(films);
 
     if (filmsRenderedNumber === films.length) {

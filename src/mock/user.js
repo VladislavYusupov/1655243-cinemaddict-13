@@ -1,5 +1,5 @@
-import getRandomInteger from "../helpers/mockGenerateHelper";
-import {generateTitle} from "./common";
+import generateTitle from "./title";
+import getRandomPositiveInt from "../helpers/getRandomPositiveInt";
 
 const USER_RANKS = new Map([
   [21, `movie buff`],
@@ -7,6 +7,8 @@ const USER_RANKS = new Map([
   [1, `novice`],
   [0, false],
 ]);
+
+const MAX_TITLES_COUNT = 30;
 
 const getRank = (watchedFilmsCount) => {
   let userRank;
@@ -23,8 +25,7 @@ const getRank = (watchedFilmsCount) => {
 
 const generateTitles = () => {
   const randomTitles = [];
-  const MAX_TITLES_COUNT = 30;
-  const titlesCount = getRandomInteger(0, MAX_TITLES_COUNT);
+  const titlesCount = getRandomPositiveInt(MAX_TITLES_COUNT);
 
   for (let i = 0; i < titlesCount; i++) {
     randomTitles.push(generateTitle());
