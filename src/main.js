@@ -10,6 +10,7 @@ import {createFooterStatisticTemplate} from "./view/footer-statistic";
 import {createPopupTemplate} from "./view/popup";
 import {generateFilm} from "./mock/film";
 import {generateUser} from "./mock/user";
+import {renderTemplate} from "./utils";
 
 const filmListOptions = {
   main: {
@@ -27,7 +28,7 @@ const filmListOptions = {
   },
 };
 
-let filmsRenderedNumber = 0;
+let filmsrenderTemplateedNumber = 0;
 
 const films = new Array(filmListOptions.main.maxCount).fill().map(generateFilm);
 const user = generateUser();
@@ -37,15 +38,15 @@ const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
-const renderFilmsRow = () => {
+const renderTemplateFilmsRow = () => {
   const filmsListContainerElement = mainElement.querySelector(`.films-list__container`);
 
-  if (filmsRenderedNumber < films.length) {
+  if (filmsrenderTemplateedNumber < films.length) {
     films
-      .slice(filmsRenderedNumber, filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine)
+      .slice(filmsrenderTemplateedNumber, filmsrenderTemplateedNumber + filmListOptions.main.maxFilmsPerLine)
       .forEach((film) => {
-        render(filmsListContainerElement, createCardTemplate(film));
-        filmsRenderedNumber++;
+        renderTemplate(filmsListContainerElement, createCardTemplate(film));
+        filmsrenderTemplateedNumber++;
       });
   }
 };
@@ -74,38 +75,34 @@ const createFilmCards = (movies) => {
   return filmCards;
 };
 
-const render = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
+renderTemplate(headerElement, createProfileTemplate(user));
 
-render(headerElement, createProfileTemplate(user));
+renderTemplate(mainElement, createMenuNavigationTemplate(user));
+renderTemplate(mainElement, createSortTemplate());
+renderTemplate(mainElement, createStatisticTemplate());
 
-render(mainElement, createMenuNavigationTemplate(user));
-render(mainElement, createSortTemplate());
-render(mainElement, createStatisticTemplate());
-
-render(mainElement, createFilmsTemplate());
-renderFilmsRow(films);
+renderTemplate(mainElement, createFilmsTemplate());
+renderTemplateFilmsRow(films);
 
 const filmsElement = mainElement.querySelector(`.films`);
 const filmsListElement = mainElement.querySelector(`.films-list`);
 
-if (filmsRenderedNumber < films.length) {
-  render(filmsListElement, createShowMoreButtonTemplate());
+if (filmsrenderTemplateedNumber < films.length) {
+  renderTemplate(filmsListElement, createShowMoreButtonTemplate());
   const showButton = filmsListElement.querySelector(`.films-list__show-more`);
 
   showButton.addEventListener(`click`, (e) => {
     e.preventDefault();
-    renderFilmsRow(films);
+    renderTemplateFilmsRow(films);
 
-    if (filmsRenderedNumber === films.length) {
+    if (filmsrenderTemplateedNumber === films.length) {
       showButton.remove();
     }
   });
 }
 
-render(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.topRated.name, createFilmCards(getTopRatedFilms(films))));
-render(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.mostComment.name, createFilmCards(getMostCommentedFilms(films))));
+renderTemplate(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.topRated.name, createFilmCards(getTopRatedFilms(films))));
+renderTemplate(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.mostComment.name, createFilmCards(getMostCommentedFilms(films))));
 
-render(footerStatisticsElement, createFooterStatisticTemplate(films));
-render(footerElement, createPopupTemplate(films[0]), `afterend`);
+renderTemplate(footerStatisticsElement, createFooterStatisticTemplate(films));
+renderTemplate(footerElement, createPopupTemplate(films[0]), `afterend`);
