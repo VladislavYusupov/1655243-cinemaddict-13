@@ -1,6 +1,7 @@
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
 };
 
 export const renderElement = (container, element, place) => {
@@ -19,8 +20,8 @@ export const renderTemplate = (container, template, place = `beforeend`) => {
 };
 
 export const createElement = (template) => {
-  const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
+  const elem = document.createElement(`div`);
+  elem.innerHTML = template;
 
-  return newElement.firstChild;
+  return elem.firstElementChild;
 };

@@ -1,16 +1,16 @@
-import {createProfileTemplate} from "./view/profile";
-import {createMenuNavigationTemplate} from "./view/menu-navigation";
-import {createSortTemplate} from "./view/sort";
-import {createStatisticTemplate} from "./view/statistic";
-import {createFilmsTemplate} from "./view/films";
-import {createCardTemplate} from "./view/film-card";
-import {createShowMoreButtonTemplate} from "./view/show-more-button";
-import {createFilmsListExtraTemplate} from "./view/films-list-extra";
-import {createFooterStatisticTemplate} from "./view/footer-statistic";
-import {createPopupTemplate} from "./view/popup";
+import ProfileView from "./view/profile";
+import MenuNavigationView from "./view/menu-navigation";
+import SortView from "./view/sort";
+import StatisticView from "./view/statistic";
+import FilmsView from "./view/films";
+import CardView from "./view/film-card";
+import ShowMoreButtonView from "./view/show-more-button";
+import FilmsListExtraView from "./view/films-list-extra";
+import FooterStatisticView from "./view/footer-statistic";
+import PopupView from "./view/popup";
 import {generateFilm} from "./mock/film";
 import {generateUser} from "./mock/user";
-import {renderTemplate} from "./utils";
+import {renderTemplate, renderElement, RenderPosition} from "./utils";
 
 const filmListOptions = {
   main: {
@@ -28,7 +28,7 @@ const filmListOptions = {
   },
 };
 
-let filmsrenderTemplateedNumber = 0;
+let filmsRenderedNumber = 0;
 
 const films = new Array(filmListOptions.main.maxCount).fill().map(generateFilm);
 const user = generateUser();
@@ -41,12 +41,12 @@ const footerStatisticsElement = footerElement.querySelector(`.footer__statistics
 const renderTemplateFilmsRow = () => {
   const filmsListContainerElement = mainElement.querySelector(`.films-list__container`);
 
-  if (filmsrenderTemplateedNumber < films.length) {
+  if (filmsRenderedNumber < films.length) {
     films
-      .slice(filmsrenderTemplateedNumber, filmsrenderTemplateedNumber + filmListOptions.main.maxFilmsPerLine)
+      .slice(filmsRenderedNumber, filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine)
       .forEach((film) => {
-        renderTemplate(filmsListContainerElement, createCardTemplate(film));
-        filmsrenderTemplateedNumber++;
+        renderElement(filmsListContainerElement, new CardView(film).getElement(), RenderPosition.BEFOREEND);
+        filmsRenderedNumber++;
       });
   }
 };
@@ -70,39 +70,39 @@ const getMostCommentedFilms = (movies) => {
 const createFilmCards = (movies) => {
   let filmCards = ``;
 
-  movies.forEach((movie) => (filmCards += createCardTemplate(movie)));
+  movies.forEach((movie) => (filmCards += new CardView(movie).getTemplate()));
 
   return filmCards;
 };
 
-renderTemplate(headerElement, createProfileTemplate(user));
+renderTemplate(headerElement, new ProfileView(user).getTemplate(), RenderPosition.BEFOREEND);
 
-renderTemplate(mainElement, createMenuNavigationTemplate(user));
-renderTemplate(mainElement, createSortTemplate());
-renderTemplate(mainElement, createStatisticTemplate());
+renderElement(mainElement, new MenuNavigationView(user).getElement(), RenderPosition.BEFOREEND);
+renderElement(mainElement, new SortView(user).getElement(), RenderPosition.BEFOREEND);
+renderElement(mainElement, new StatisticView().getElement(), RenderPosition.BEFOREEND);
 
-renderTemplate(mainElement, createFilmsTemplate());
+renderElement(mainElement, new FilmsView().getElement(), RenderPosition.BEFOREEND);
 renderTemplateFilmsRow(films);
 
 const filmsElement = mainElement.querySelector(`.films`);
 const filmsListElement = mainElement.querySelector(`.films-list`);
 
-if (filmsrenderTemplateedNumber < films.length) {
-  renderTemplate(filmsListElement, createShowMoreButtonTemplate());
+if (filmsRenderedNumber < films.length) {
+  renderElement(filmsListElement, new ShowMoreButtonView().getElement(), RenderPosition.BEFOREEND);
   const showButton = filmsListElement.querySelector(`.films-list__show-more`);
 
   showButton.addEventListener(`click`, (e) => {
     e.preventDefault();
     renderTemplateFilmsRow(films);
 
-    if (filmsrenderTemplateedNumber === films.length) {
+    if (filmsRenderedNumber === films.length) {
       showButton.remove();
     }
   });
 }
 
-renderTemplate(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.topRated.name, createFilmCards(getTopRatedFilms(films))));
-renderTemplate(filmsElement, createFilmsListExtraTemplate(filmListOptions.extra.mostComment.name, createFilmCards(getMostCommentedFilms(films))));
+renderElement(filmsElement, new FilmsListExtraView(filmListOptions.extra.topRated.name, createFilmCards(getTopRatedFilms(films))).getElement(), RenderPosition.BEFOREEND);
+renderElement(filmsElement, new FilmsListExtraView(filmListOptions.extra.mostComment.name, createFilmCards(getMostCommentedFilms(films))).getElement(), RenderPosition.BEFOREEND);
 
-renderTemplate(footerStatisticsElement, createFooterStatisticTemplate(films));
-renderTemplate(footerElement, createPopupTemplate(films[0]), `afterend`);
+renderElement(footerStatisticsElement, new FooterStatisticView(films).getElement(), RenderPosition.BEFOREEND);
+renderElement(footerElement, new PopupView(films[0]).getElement(), RenderPosition.AFTERBEGIN);

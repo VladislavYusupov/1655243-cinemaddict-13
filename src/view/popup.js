@@ -2,8 +2,9 @@ import convertArrayToString from "../helpers/convertArrayToString";
 import createPopupElement from "../createPopupElement";
 import {createPopupGenreTemplate} from "./popup-genre";
 import {createPopupCommentTemplate} from "./popup-comment";
+import {createElement} from "../utils";
 
-export const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments}) => {
+const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -103,3 +104,23 @@ export const createPopupTemplate = ({title, titleOriginal, director, writers, ac
       </form>
     </section>`;
 };
+
+export default class Popup {
+  constructor(film) {
+    this._element = null;
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createPopupTemplate(this._film);
+  }
+
+  getElement() {
+    this._element = this._element ? this._element : createElement(this.getTemplate());
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
