@@ -111,6 +111,10 @@ export default class Popup {
     this._film = film;
   }
 
+  setFilm(film) {
+    this._film = film;
+  }
+
   getTemplate() {
     return createPopupTemplate(this._film);
   }

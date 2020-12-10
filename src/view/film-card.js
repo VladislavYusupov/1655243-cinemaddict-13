@@ -27,6 +27,10 @@ export default class Card {
     this._film = film;
   }
 
+  getFilm() {
+    return this._film;
+  }
+
   getTemplate() {
     return createCardTemplate(this._film);
   }
