@@ -1,16 +1,17 @@
 import {createElement} from "../utils";
 
-export const createPopupGenreTemplate = (genre) => {
+const createPopupGenreTemplate = (genre) => {
   return `<span class="film-details__genre">${genre}</span>`;
 };
 
 export default class PopupGenre {
-  constructor() {
+  constructor(genre) {
     this._element = null;
+    this._genre = genre;
   }
 
   getTemplate() {
-    return createPopupGenreTemplate();
+    return createPopupGenreTemplate(this._genre);
   }
 
   getElement() {

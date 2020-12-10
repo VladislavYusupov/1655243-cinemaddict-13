@@ -1,6 +1,6 @@
 import {createElement} from "../utils";
 
-export const createPopupCommentTemplate = ({message, emoji, author, date}) => {
+const createPopupCommentTemplate = ({message, emoji, author, date}) => {
   return `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -18,12 +18,13 @@ export const createPopupCommentTemplate = ({message, emoji, author, date}) => {
 };
 
 export default class PopupComment {
-  constructor() {
+  constructor(comment) {
     this._element = null;
+    this._comment = comment;
   }
 
   getTemplate() {
-    return createPopupCommentTemplate();
+    return createPopupCommentTemplate(this._comment);
   }
 
   getElement() {
