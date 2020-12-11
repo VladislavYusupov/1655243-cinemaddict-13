@@ -104,9 +104,9 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
 };
 
 export default class Popup {
-  constructor(film) {
+  constructor() {
     this._element = null;
-    this._film = film ? film : null;
+    this._film = null;
   }
 
   setFilm(film) {
