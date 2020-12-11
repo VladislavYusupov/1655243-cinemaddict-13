@@ -14,10 +14,6 @@ export const render = (container, element, place = RenderPosition.BEFOREEND) => 
   }
 };
 
-export const renderTemplate = (container, template, place = `beforeend`) => {
-  container.insertAdjacentHTML(place, template);
-};
-
 export const createElement = (template) => {
   const elem = document.createElement(`div`);
   elem.innerHTML = template;
