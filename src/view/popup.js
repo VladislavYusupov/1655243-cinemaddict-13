@@ -1,9 +1,8 @@
 import convertArrayToString from "../helpers/convertArrayToString";
-import createPopupElement from "../createPopupElement";
-import {createPopupGenreTemplate} from "./popup-genre";
-import {createPopupCommentTemplate} from "./popup-comment";
+import createPopupGenres from "../createPopupGenres";
+import {createElement} from "../utils";
 
-export const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments}) => {
+const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -53,7 +52,7 @@ export const createPopupTemplate = ({title, titleOriginal, director, writers, ac
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${createPopupElement(genres, createPopupGenreTemplate)}</td>
+                  <td class="film-details__cell">${createPopupGenres(genres)}</td>
                 </tr>
               </table>
               <p class="film-details__film-description">
@@ -73,7 +72,7 @@ export const createPopupTemplate = ({title, titleOriginal, director, writers, ac
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-            <ul class="film-details__comments-list">${createPopupElement(comments, createPopupCommentTemplate)}</ul>
+            <ul class="film-details__comments-list"></ul>
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label"></div>
               <label class="film-details__comment-label">
@@ -103,3 +102,27 @@ export const createPopupTemplate = ({title, titleOriginal, director, writers, ac
       </form>
     </section>`;
 };
+
+export default class Popup {
+  constructor(film) {
+    this._element = null;
+    this._film = film ? film : null;
+  }
+
+  setFilm(film) {
+    this._film = film;
+  }
+
+  getTemplate() {
+    return createPopupTemplate(this._film);
+  }
+
+  getElement() {
+    this._element = this._element ? this._element : createElement(this.getTemplate());
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
