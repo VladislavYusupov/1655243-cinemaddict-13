@@ -29,7 +29,7 @@ const filmListOptions = {
 
 let filmsRenderedNumber = 0;
 
-const films = new Array(filmListOptions.main.maxCount).fill().map(generateFilm);
+const films = new Array(filmListOptions.main.maxCount).fill({}).map(generateFilm);
 const user = generateUser();
 
 const headerElement = document.querySelector(`.header`);

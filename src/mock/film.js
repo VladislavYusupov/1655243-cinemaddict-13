@@ -20,7 +20,7 @@ const FRACTIONAL_CHARACTERS_NUMBER_IN_RATING = 1;
 const MAX_RATING = 10;
 const DESCRIPTION_MAX_LENGTH = 140;
 
-const posters = [
+const POSTERS = [
   `made-for-each-other.png`,
   `popeye-meets-sinbad.png`,
   `sagebrush-trail.jpg`,
@@ -30,7 +30,7 @@ const posters = [
   `the-man-with-the-golden-arm.jpg`,
 ];
 
-const sentences = [
+const SENTENCES = [
   `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
   `Cras aliquet varius magna, non porta ligula feugiat eget.`,
   `Fusce tristique felis at fermentum pharetra.`,
@@ -44,7 +44,7 @@ const sentences = [
   `In rutrum ac purus sit amet tempus.`,
 ];
 
-const directors = [
+const DIRECTORS = [
   `Martin Scorsese`,
   `Christopher Nolan`,
   `Tim Berton`,
@@ -52,7 +52,7 @@ const directors = [
   `David Fincher`,
 ];
 
-const writers = [
+const WRITERS = [
   `Anne Wigton`,
   `Heinz Herald`,
   `Richard Weil`,
@@ -63,7 +63,7 @@ const writers = [
   `Charlie Kaufman`,
 ];
 
-const actors = [
+const ACTORS = [
   `Tom Hanks`,
   `Leonardo DiCaprio`,
   `Samuel L.Jackson`,
@@ -75,21 +75,21 @@ const actors = [
   `Nicole Kidman`,
 ];
 
-const releaseDates = [
+const RELEASE_DATES = [
   `30 March 1945`,
   `2 January 2007`,
   `5 December 1998`,
   `10 August 2015`,
 ];
 
-const runtimes = [
+const RUNTIMES = [
   `1h 18m`,
   `2h 3m`,
   `2h 30m`,
   `1h 50m`,
 ];
 
-const countries = [
+const COUNTRIES = [
   `USA`,
   `Russia`,
   `Germany`,
@@ -97,7 +97,7 @@ const countries = [
   `China`,
 ];
 
-const genres = [
+const GENRES = [
   `Horror`,
   `Action`,
   `Romance`,
@@ -109,7 +109,7 @@ const genres = [
   `Mystery`,
 ];
 
-const ages = [
+const AGES = [
   `18+`,
   `16+`,
   `12+`,
@@ -117,7 +117,7 @@ const ages = [
 ];
 
 const generatePoster = (title) => {
-  return posters.find((poster) => poster.startsWith(title.toLowerCase().replaceAll(` `, `-`)));
+  return POSTERS.find((poster) => poster.startsWith(title.toLowerCase().replaceAll(` `, `-`)));
 };
 
 const generateRating = () => {
@@ -134,19 +134,19 @@ const trimDescription = (description) => {
 
 export const generateFilm = () => {
   const title = generateTitle();
-  const description = convertArrayToString(getArrayRandomElements(sentences, MIN_SENTENCES_COUNT, MAX_SENTENCES_COUNT), SENTENCES_DELIMITER);
+  const description = convertArrayToString(getArrayRandomElements(SENTENCES, MIN_SENTENCES_COUNT, MAX_SENTENCES_COUNT), SENTENCES_DELIMITER);
 
   return {
     title,
     titleOriginal: generateOriginalTitle(title),
-    director: getArrayRandomElement(directors),
-    writers: getArrayRandomElements(writers, MIN_WRITERS_COUNT, MAX_WRITERS_COUNT),
-    actors: getArrayRandomElements(actors, MIN_ACTORS_COUNT, MAX_ACTORS_COUNT),
-    releaseDate: getArrayRandomElement(releaseDates),
-    runtime: getArrayRandomElement(runtimes),
-    country: getArrayRandomElement(countries),
-    genres: getArrayRandomElements(genres, MIN_GENRES_COUNT, MAX_GENRES_COUNT),
-    age: getArrayRandomElement(ages),
+    director: getArrayRandomElement(DIRECTORS),
+    writers: getArrayRandomElements(WRITERS, MIN_WRITERS_COUNT, MAX_WRITERS_COUNT),
+    actors: getArrayRandomElements(ACTORS, MIN_ACTORS_COUNT, MAX_ACTORS_COUNT),
+    releaseDate: getArrayRandomElement(RELEASE_DATES),
+    runtime: getArrayRandomElement(RUNTIMES),
+    country: getArrayRandomElement(COUNTRIES),
+    genres: getArrayRandomElements(GENRES, MIN_GENRES_COUNT, MAX_GENRES_COUNT),
+    age: getArrayRandomElement(AGES),
     poster: generatePoster(title),
     description,
     shortDescription: trimDescription(description),

@@ -1,13 +1,13 @@
 import getRandomInteger from "./getRandomInteger";
-import getRandomPositiveInt from "./getRandomPositiveInt";
+import getArrayRandomElement from "./getArrayRandomElement";
 
 const getArrayRandomElements = (arr, minElementsNumber, maxElementsNumber) => {
   const elementsNumber = getRandomInteger(minElementsNumber, maxElementsNumber);
   const newArray = [];
 
   for (let i = 0; i < elementsNumber; i++) {
-    let elementNumber = getRandomPositiveInt(arr.length - 1);
-    newArray.push(arr[elementNumber]);
+    let randomElement = getArrayRandomElement(arr);
+    newArray.push(randomElement);
   }
 
   return newArray;

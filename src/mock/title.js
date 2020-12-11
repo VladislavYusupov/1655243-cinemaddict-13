@@ -1,6 +1,6 @@
 import getArrayRandomElement from "../helpers/getArrayRandomElement";
 
-const titles = [
+const TITLES = [
   `Made for each other`,
   `Popeye meets sinbad`,
   `Sagebrush trail`,
@@ -10,6 +10,6 @@ const titles = [
   `The man with the golden arm`,
 ];
 
-const generateTitle = () => getArrayRandomElement(titles);
+const generateTitle = () => getArrayRandomElement(TITLES);
 
 export default generateTitle;

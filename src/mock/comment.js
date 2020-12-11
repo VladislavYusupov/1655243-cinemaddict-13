@@ -1,7 +1,7 @@
 import getRandomInteger from "../helpers/getRandomInteger";
 import getArrayRandomElement from "../helpers/getArrayRandomElement";
 
-const messages = [
+const MESSAGES = [
   `Interesting setting and a good cast`,
   `Booooooooooring`,
   `Very very old. Meh`,
@@ -9,14 +9,14 @@ const messages = [
   `Not so bad`,
 ];
 
-const emojis = [
+const EMOJIS = [
   `smile`,
   `sleeping`,
   `puke`,
   `angry`,
 ];
 
-const authors = [
+const AUTHORS = [
   `John Doe`,
   `Doe John`,
   `John John`,
@@ -24,7 +24,7 @@ const authors = [
   `John John Doe`,
 ];
 
-const dates = [
+const DATES = [
   `2014/12/31 23:59`,
   `2011/05/03 08:15`,
   `2005/04/20 16:34`,
@@ -34,13 +34,13 @@ const dates = [
 
 const generateComments = (minCommentCount, maxCommentCount) => {
   return new Array(getRandomInteger(minCommentCount, maxCommentCount))
-    .fill()
+    .fill({})
     .map(() => {
       return {
-        message: getArrayRandomElement(messages),
-        emoji: getArrayRandomElement(emojis),
-        author: getArrayRandomElement(authors),
-        date: getArrayRandomElement(dates),
+        message: getArrayRandomElement(MESSAGES),
+        emoji: getArrayRandomElement(EMOJIS),
+        author: getArrayRandomElement(AUTHORS),
+        date: getArrayRandomElement(DATES),
       };
     });
 };

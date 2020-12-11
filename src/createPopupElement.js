@@ -1,7 +1,7 @@
 const createPopupElement = (elements, createPopupElementTemplateFunction) => {
   let elementList = [];
 
-  for (let element of elements) {
+  for (const element of elements) {
     const popupElement = createPopupElementTemplateFunction(element);
     elementList.push(popupElement);
   }
