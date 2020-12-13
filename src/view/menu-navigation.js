@@ -1,4 +1,6 @@
-export const createMenuNavigationTemplate = ({watchList, history, favorites}) => {
+import {createElement} from "../utils";
+
+const createMenuNavigationTemplate = ({watchList, history, favorites}) => {
   return `
     <nav class="main-navigation">
       <div class="main-navigation__items">
@@ -10,3 +12,23 @@ export const createMenuNavigationTemplate = ({watchList, history, favorites}) =>
       <a href="#stats" class="main-navigation__additional">Stats</a>
     </nav>`;
 };
+
+export default class MenuNavigation {
+  constructor(user) {
+    this._element = null;
+    this._user = user;
+  }
+
+  getTemplate() {
+    return createMenuNavigationTemplate(this._user);
+  }
+
+  getElement() {
+    this._element = this._element ? this._element : createElement(this.getTemplate());
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
