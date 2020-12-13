@@ -3,7 +3,7 @@ import PopupGenreView from "./view/popup-genre";
 const createPopupGenres = (genres) => {
   let genreTemplates = [];
 
-  for (let genre of genres) {
+  for (const genre of genres) {
     const genreTemplate = new PopupGenreView(genre).getTemplate();
     genreTemplates.push(genreTemplate);
   }
