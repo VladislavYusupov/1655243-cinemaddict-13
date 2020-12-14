@@ -9,6 +9,7 @@ import FilmsListExtraView from "./view/films-list-extra";
 import FooterStatisticView from "./view/footer-statistic";
 import PopupView from "./view/popup";
 import PopupCommentView from "./view/popup-comment";
+import FilmsEmptyView from "./view/films-empty";
 import {generateFilm} from "./mock/film";
 import {generateUser} from "./mock/user";
 import {render} from "./utils";
@@ -131,28 +132,33 @@ render(headerElement, new ProfileView(user).getElement());
 
 render(mainElement, new MenuNavigationView(user).getElement());
 render(mainElement, new SortView(user).getElement());
-render(mainElement, new StatisticView().getElement());
 
-render(mainElement, new FilmsView().getElement());
-renderFilmsRow(films);
+if (films.length > 0) {
+  render(mainElement, new StatisticView().getElement());
 
-if (filmsRenderedNumber < films.length) {
-  const filmsListElement = mainElement.querySelector(`.films-list`);
+  render(mainElement, new FilmsView().getElement());
+  renderFilmsRow(films);
 
-  render(filmsListElement, new ShowMoreButtonView().getElement());
-  const showButton = filmsListElement.querySelector(`.films-list__show-more`);
+  if (filmsRenderedNumber < films.length) {
+    const filmsListElement = mainElement.querySelector(`.films-list`);
 
-  showButton.addEventListener(`click`, (evt) => {
-    evt.preventDefault();
-    renderFilmsRow(films);
+    render(filmsListElement, new ShowMoreButtonView().getElement());
+    const showButton = filmsListElement.querySelector(`.films-list__show-more`);
 
-    if (filmsRenderedNumber === films.length) {
-      showButton.remove();
-    }
-  });
+    showButton.addEventListener(`click`, (evt) => {
+      evt.preventDefault();
+      renderFilmsRow(films);
+
+      if (filmsRenderedNumber === films.length) {
+        showButton.remove();
+      }
+    });
+  }
+
+  renderFilmsExtra(filmListOptions.extra.topRated.name, getTopRatedFilms(films));
+  renderFilmsExtra(filmListOptions.extra.mostComment.name, getMostCommentedFilms(films));
+} else {
+  render(mainElement, new FilmsEmptyView().getElement());
 }
-
-renderFilmsExtra(filmListOptions.extra.topRated.name, getTopRatedFilms(films));
-renderFilmsExtra(filmListOptions.extra.mostComment.name, getMostCommentedFilms(films));
 
 render(footerStatisticsElement, new FooterStatisticView(films).getElement());
