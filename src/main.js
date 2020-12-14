@@ -12,7 +12,7 @@ import PopupCommentView from "./view/popup-comment";
 import FilmsEmptyView from "./view/films-empty";
 import {generateFilm} from "./mock/film";
 import {generateUser} from "./mock/user";
-import {render} from "./utils";
+import {remove, render} from "./utils/render";
 
 const filmListOptions = {
   main: {
@@ -50,7 +50,6 @@ const renderFilmsRow = () => {
       .slice(filmsRenderedNumber, filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine)
       .forEach((film) => {
         renderFilm(filmListContainerElement, film);
-
         filmsRenderedNumber++;
       });
   }
@@ -58,10 +57,10 @@ const renderFilmsRow = () => {
 
 const renderFilmsExtra = (title, selectedFilms) => {
   const filmsElement = mainElement.querySelector(`.films`);
-  const filmListExtraElement = new FilmsListExtraView(title).getElement();
+  const filmListExtraComponent = new FilmsListExtraView(title);
 
-  render(filmsElement, filmListExtraElement);
-  const extraContainerElement = filmListExtraElement.querySelector(`.films-list__container`);
+  render(filmsElement, filmListExtraComponent);
+  const extraContainerElement = filmListExtraComponent.getElement().querySelector(`.films-list__container`);
 
   selectedFilms.forEach((film) => {
     renderFilm(extraContainerElement, film);
@@ -72,21 +71,20 @@ const renderFilm = (container, film) => {
   const filmCardComponent = new CardView(film);
   filmCardComponent.setClickHandler(() => filmCardClickHandler(film));
 
-  render(container, filmCardComponent.getElement());
+  render(container, filmCardComponent);
 };
 
 const filmCardClickHandler = (film) => {
   popupComponent.setFilm(film);
   popupComponent.setClickHandler(deletePopup);
-  const popupElement = popupComponent.getElement();
-  const popupCommentsListElement = popupElement.querySelector(`.film-details__comments-list`);
+  const popupCommentsListElement = popupComponent.getElement().querySelector(`.film-details__comments-list`);
 
   film.comments.forEach((comment) => {
-    render(popupCommentsListElement, new PopupCommentView(comment).getElement());
+    render(popupCommentsListElement, new PopupCommentView(comment));
   });
 
   document.addEventListener(`keydown`, popupEscKeyDownHandler);
-  document.body.appendChild(popupElement);
+  document.body.appendChild(popupComponent.getElement());
   document.body.classList.add(`hide-overflow`);
 };
 
@@ -100,8 +98,7 @@ const popupEscKeyDownHandler = (evt) => {
 const deletePopup = () => {
   document.removeEventListener(`keydown`, popupEscKeyDownHandler);
   document.body.classList.remove(`hide-overflow`);
-  document.body.removeChild(popupComponent.getElement());
-  popupComponent.removeElement();
+  remove(popupComponent);
 };
 
 const getTopRatedFilms = (movies) => {
@@ -124,34 +121,31 @@ const showMoreButtonClickHandler = () => {
   renderFilmsRow(films);
 
   if (filmsRenderedNumber >= films.length) {
-    showMoreButtonComponent.getElement().remove();
-    showMoreButtonComponent.removeElement();
+    remove(showMoreButtonComponent);
   }
 };
 
-render(headerElement, new ProfileView(user).getElement());
+render(headerElement, new ProfileView(user));
 
-render(mainElement, new MenuNavigationView(user).getElement());
-render(mainElement, new SortView(user).getElement());
+render(mainElement, new MenuNavigationView(user));
+render(mainElement, new SortView());
 
 if (films.length > 0) {
-  render(mainElement, new StatisticView().getElement());
-
-  render(mainElement, new FilmsView().getElement());
+  render(mainElement, new StatisticView());
+  render(mainElement, new FilmsView());
   renderFilmsRow(films);
 
   if (filmsRenderedNumber < films.length) {
     const filmsListElement = mainElement.querySelector(`.films-list`);
 
-    render(filmsListElement, showMoreButtonComponent.getElement());
-
+    render(filmsListElement, showMoreButtonComponent);
     showMoreButtonComponent.setClickHandler(showMoreButtonClickHandler);
   }
 
   renderFilmsExtra(filmListOptions.extra.topRated.name, getTopRatedFilms(films));
   renderFilmsExtra(filmListOptions.extra.mostComment.name, getMostCommentedFilms(films));
 } else {
-  render(mainElement, new FilmsEmptyView().getElement());
+  render(mainElement, new FilmsEmptyView());
 }
 
-render(footerStatisticsElement, new FooterStatisticView(films).getElement());
+render(footerStatisticsElement, new FooterStatisticView(films));
