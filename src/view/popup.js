@@ -1,6 +1,6 @@
 import convertArrayToString from "../helpers/convertArrayToString";
 import createPopupGenres from "../createPopupGenres";
-import {createElement} from "../utils";
+import AbstractView from "./abstract.js";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments}) => {
   return `
@@ -103,10 +103,11 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
     </section>`;
 };
 
-export default class Popup {
+export default class Popup extends AbstractView {
   constructor() {
-    this._element = null;
+    super();
     this._film = null;
+    this._clickHandler = this._clickHandler.bind(this);
   }
 
   setFilm(film) {
@@ -117,12 +118,13 @@ export default class Popup {
     return createPopupTemplate(this._film);
   }
 
-  getElement() {
-    this._element = this._element ? this._element : createElement(this.getTemplate());
-    return this._element;
+  setClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().addEventListener(`click`, this._clickHandler);
   }
 
-  removeElement() {
-    this._element = null;
+  _clickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
 }
