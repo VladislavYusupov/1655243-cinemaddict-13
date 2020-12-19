@@ -1,3 +1,4 @@
+import {nanoid} from "nanoid";
 import generateComments from "./comment";
 import generateTitle from "./title";
 import getRandomPositiveInt from "../helpers/getRandomPositiveInt";
@@ -137,6 +138,7 @@ export const generateFilm = () => {
   const description = convertArrayToString(getArrayRandomElements(SENTENCES, MIN_SENTENCES_COUNT, MAX_SENTENCES_COUNT), SENTENCES_DELIMITER);
 
   return {
+    id: nanoid(),
     title,
     titleOriginal: generateOriginalTitle(title),
     director: getArrayRandomElement(DIRECTORS),
@@ -152,5 +154,8 @@ export const generateFilm = () => {
     shortDescription: trimDescription(description),
     rating: generateRating(),
     comments: generateComments(MIN_COMMENT_COUNT, MAX_COMMENT_COUNT),
+    inWatchListCollection: !!getRandomPositiveInt(1),
+    inWatchedCollection: !!getRandomPositiveInt(1),
+    inFavoriteCollection: !!getRandomPositiveInt(1),
   };
 };
