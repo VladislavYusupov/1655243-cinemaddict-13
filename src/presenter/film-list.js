@@ -7,20 +7,12 @@ import ShowMoreButtonView from "../view/show-more-button";
 import FilmPresenter from "./film";
 import {updateItem} from "../utils/updateItem";
 
-const filmListOptions = {
-  main: {
-    maxCount: 20,
-    maxFilmsPerLine: 5,
-  },
-  extra: {
-    topRated: {
-      name: `Top rated`,
-    },
-    mostComment: {
-      name: `Most comment`,
-    },
-    maxCount: 2,
-  },
+const MAX_FILMS_PER_LINE = 5;
+const MAX_EXTRA_FILMS_COUNT = 2;
+
+const ExtraFilmNames = {
+  TOP_RATED: `Top rated`,
+  MOST_COMMENTED: `Most commented`,
 };
 
 export default class FilmList {
@@ -32,9 +24,9 @@ export default class FilmList {
     this._popupComponent = new PopupView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
-    this._filmComponentsMap = new Map();
-    this._topRatedFilmComponentsMap = new Map();
-    this._mostCommentedFilmComponentsMap = new Map();
+    this._filmPresentersMap = new Map();
+    this._topRatedFilmPresentersMap = new Map();
+    this._mostCommentedFilmPresentersMap = new Map();
 
     this._showMoreButtonClickHandler = this._showMoreButtonClickHandler.bind(this);
     this._handleFilmChange = this._handleFilmChange.bind(this);
@@ -54,8 +46,8 @@ export default class FilmList {
         this._showMoreButtonComponent.setClickHandler(this._showMoreButtonClickHandler);
       }
 
-      this._renderExtraFilms(filmListOptions.extra.topRated.name, this._getTopRatedFilms());
-      this._renderExtraFilms(filmListOptions.extra.mostComment.name, this._getMostCommentedFilms());
+      this._renderExtraFilms(ExtraFilmNames.TOP_RATED, this._getTopRatedFilms());
+      this._renderExtraFilms(ExtraFilmNames.MOST_COMMENTED, this._getMostCommentedFilms());
     } else {
       render(this._filmsContainer, this._emptyFilmsViewComponent);
     }
@@ -66,12 +58,12 @@ export default class FilmList {
 
     if (this._filmsRenderedNumber < this._films.length) {
       this._films
-        .slice(this._filmsRenderedNumber, this._filmsRenderedNumber + filmListOptions.main.maxFilmsPerLine)
+        .slice(this._filmsRenderedNumber, this._filmsRenderedNumber + MAX_FILMS_PER_LINE)
         .forEach((film) => {
-          const filmComponent = new FilmPresenter(this._filmListContainerElement, this._popupComponent, this._handleFilmChange);
-          filmComponent.init(film);
+          const filmPresenter = new FilmPresenter(this._filmListContainerElement, this._popupComponent, this._handleFilmChange);
+          filmPresenter.init(film);
           this._filmsRenderedNumber++;
-          this._filmComponentsMap.set(film.id, filmComponent);
+          this._filmPresentersMap.set(film.id, filmPresenter);
         });
     }
   }
@@ -89,7 +81,7 @@ export default class FilmList {
       .sort(({rating: a}, {rating: b}) => {
         return b - a;
       })
-      .slice(0, filmListOptions.extra.maxCount);
+      .slice(0, MAX_EXTRA_FILMS_COUNT);
   }
 
   _getMostCommentedFilms() {
@@ -97,7 +89,7 @@ export default class FilmList {
       .sort(({comments: a}, {comments: b}) => {
         return b.length - a.length;
       })
-      .slice(0, filmListOptions.extra.maxCount);
+      .slice(0, MAX_EXTRA_FILMS_COUNT);
   }
 
   _renderExtraFilms(title, extraFilms) {
@@ -107,15 +99,15 @@ export default class FilmList {
     const extraContainerElement = extraFilmListComponent.getElement().querySelector(`.films-list__container`);
 
     extraFilms.forEach((film) => {
-      const extraFilmComponent = new FilmPresenter(extraContainerElement, this._popupComponent, this._handleFilmChange);
-      extraFilmComponent.init(film);
+      const extraFilmPresenter = new FilmPresenter(extraContainerElement, this._popupComponent, this._handleFilmChange);
+      extraFilmPresenter.init(film);
 
       switch (title) {
-        case filmListOptions.extra.topRated.name:
-          this._topRatedFilmComponentsMap.set(film.id, extraFilmComponent);
+        case ExtraFilmNames.TOP_RATED:
+          this._topRatedFilmPresentersMap.set(film.id, extraFilmPresenter);
           break;
-        case filmListOptions.extra.mostComment.name:
-          this._mostCommentedFilmComponentsMap.set(film.id, extraFilmComponent);
+        case ExtraFilmNames.MOST_COMMENTED:
+          this._mostCommentedFilmPresentersMap.set(film.id, extraFilmPresenter);
           break;
       }
     });
@@ -124,9 +116,9 @@ export default class FilmList {
   _handleFilmChange(film) {
     this._films = updateItem(this._films, film);
 
-    this._updateFilmComponentIfMapHaveIt(this._filmComponentsMap, film);
-    this._updateFilmComponentIfMapHaveIt(this._topRatedFilmComponentsMap, film);
-    this._updateFilmComponentIfMapHaveIt(this._mostCommentedFilmComponentsMap, film);
+    this._updateFilmComponentIfMapHaveIt(this._filmPresentersMap, film);
+    this._updateFilmComponentIfMapHaveIt(this._topRatedFilmPresentersMap, film);
+    this._updateFilmComponentIfMapHaveIt(this._mostCommentedFilmPresentersMap, film);
   }
 
   _updateFilmComponentIfMapHaveIt(map, film) {

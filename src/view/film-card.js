@@ -1,5 +1,4 @@
 import AbstractView from "./abstract.js";
-import {FilmsCollection} from "../const";
 
 const createCardTemplate = ({title, poster, shortDescription, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
   return `
@@ -26,59 +25,59 @@ export default class Card extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
-    this._clickHandler = this._clickHandler.bind(this);
-    this._clickButtonHandler = this._clickButtonHandler.bind(this);
-    this._getControlItemClass = this._getControlItemClass.bind(this);
+    this._infoClickHandler = this._infoClickHandler.bind(this);
+    this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
+    this._markAsWatchedClickHandler = this._markAsWatchedClickHandler.bind(this);
+    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
   getTemplate() {
     return createCardTemplate(this._film);
   }
 
-  setClickHandler(callback) {
+  setInfoClickHandler(callback) {
     this._callback.click = callback;
 
-    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._clickHandler);
-    this.getElement().querySelector(`img`).addEventListener(`click`, this._clickHandler);
-    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._clickHandler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._infoClickHandler);
+    this.getElement().querySelector(`img`).addEventListener(`click`, this._infoClickHandler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._infoClickHandler);
   }
 
-  setClickButtonHandler(callback) {
-    this._callback.clickButton = callback;
-    this.getElement().querySelector(`.film-card__controls`).addEventListener(`click`, this._clickButtonHandler);
+  setAddToWatchListClickHandler(callback) {
+    this._callback.addToWatchListClick = callback;
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`).addEventListener(`click`, this._addToWatchListClickHandler);
   }
 
-  _clickHandler(evt) {
+  setMarkAsWatchedClickHandler(callback) {
+    this._callback.markAsWatchedClick = callback;
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`).addEventListener(`click`, this._markAsWatchedClickHandler);
+  }
+
+  setFavoriteClickHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`.film-card__controls-item--favorite`).addEventListener(`click`, this._favoriteClickHandler);
+  }
+
+  _addToWatchListClickHandler(evt) {
+    evt.preventDefault();
+    this._film.inWatchListCollection = !this._film.inWatchListCollection;
+    this._callback.addToWatchListClick();
+  }
+
+  _markAsWatchedClickHandler(evt) {
+    evt.preventDefault();
+    this._film.inWatchedCollection = !this._film.inWatchedCollection;
+    this._callback.markAsWatchedClick();
+  }
+
+  _favoriteClickHandler(evt) {
+    evt.preventDefault();
+    this._film.inFavoriteCollection = !this._film.inFavoriteCollection;
+    this._callback.favoriteClick();
+  }
+
+  _infoClickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
-  }
-
-  _clickButtonHandler(evt) {
-    const filmClassList = evt.target.classList;
-    const filmCardControlsItemClassPrefix = `film-card__controls-item`;
-
-    if (filmClassList.contains(filmCardControlsItemClassPrefix)) {
-      evt.preventDefault();
-
-      const filmClassListArray = Object.values(filmClassList);
-
-      if (filmClassListArray.includes(this._getControlItemClass(filmCardControlsItemClassPrefix, FilmsCollection.WATCH_LIST))) {
-        this._film.inWatchListCollection = !this._film.inWatchListCollection;
-      }
-
-      if (filmClassListArray.includes(this._getControlItemClass(filmCardControlsItemClassPrefix, FilmsCollection.WATCHED))) {
-        this._film.inWatchedCollection = !this._film.inWatchedCollection;
-      }
-
-      if (filmClassListArray.includes(this._getControlItemClass(filmCardControlsItemClassPrefix, FilmsCollection.FAVORITE))) {
-        this._film.inFavoriteCollection = !this._film.inFavoriteCollection;
-      }
-
-      this._callback.clickButton(this._film);
-    }
-  }
-
-  _getControlItemClass(classPrefix, classPostfix) {
-    return `${classPrefix}--${classPostfix}`;
   }
 }
