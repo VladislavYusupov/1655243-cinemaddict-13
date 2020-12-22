@@ -1,6 +1,5 @@
 import ProfileView from "./view/profile";
 import MenuNavigationView from "./view/menu-navigation";
-import SortView from "./view/sort";
 import FooterStatisticView from "./view/footer-statistic";
 import {generateFilm} from "./mock/film";
 import {generateUser} from "./mock/user";
@@ -19,7 +18,6 @@ const footerStatisticsElement = footerElement.querySelector(`.footer__statistics
 
 render(headerElement, new ProfileView(user));
 render(mainElement, new MenuNavigationView(user));
-render(mainElement, new SortView());
 
 new FilmListPresenter(mainElement).init(films);
 

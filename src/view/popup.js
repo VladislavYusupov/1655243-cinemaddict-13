@@ -1,6 +1,7 @@
 import convertArrayToString from "../helpers/convertArrayToString";
 import createPopupGenres from "../createPopupGenres";
 import AbstractView from "./abstract.js";
+import dayjs from "dayjs";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
   return `
@@ -40,7 +41,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${releaseDate}</td>
+                  <td class="film-details__cell">${dayjs(releaseDate).format(`D MMMM YYYY`)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
