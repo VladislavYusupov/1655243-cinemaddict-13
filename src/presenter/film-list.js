@@ -1,5 +1,6 @@
 import {render, remove} from "../utils/render";
 import FilmsView from "../view/films";
+import FilmListView from "../view/film-list";
 import PopupView from "../view/popup";
 import EmptyFilmsView from "../view/empty-films";
 import ExtraFilmsListView from "../view/extra-films-list";
@@ -19,8 +20,9 @@ export default class FilmList {
   constructor(filmsContainer) {
     this._filmsContainer = filmsContainer;
 
-    this._filmsViewComponent = new FilmsView();
-    this._emptyFilmsViewComponent = new EmptyFilmsView();
+    this._filmsComponent = new FilmsView();
+    this._flimListComponent = new FilmListView();
+    this._emptyFilmsComponent = new EmptyFilmsView();
     this._popupComponent = new PopupView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
 
@@ -37,24 +39,24 @@ export default class FilmList {
     this._filmsRenderedNumber = 0;
 
     if (this._films.length > 0) {
-      render(this._filmsContainer, this._filmsViewComponent);
-      this._filmListElement = this._filmsViewComponent.getElement().querySelector(`.films-list`);
+      render(this._filmsContainer, this._filmsComponent);
+      render(this._filmsComponent, this._flimListComponent);
       this._renderFilmsRow();
 
       if (this._filmsRenderedNumber < this._films.length) {
-        render(this._filmListElement, this._showMoreButtonComponent);
+        render(this._flimListComponent, this._showMoreButtonComponent);
         this._showMoreButtonComponent.setClickHandler(this._showMoreButtonClickHandler);
       }
 
       this._renderExtraFilms(ExtraFilmNames.TOP_RATED, this._getTopRatedFilms());
       this._renderExtraFilms(ExtraFilmNames.MOST_COMMENTED, this._getMostCommentedFilms());
     } else {
-      render(this._filmsContainer, this._emptyFilmsViewComponent);
+      render(this._filmsContainer, this._emptyFilmsComponent);
     }
   }
 
   _renderFilmsRow() {
-    this._filmListContainerElement = this._filmsViewComponent.getElement().querySelector(`.films-list__container`);
+    this._filmListContainerElement = this._filmsComponent.getElement().querySelector(`.films-list__container`);
 
     if (this._filmsRenderedNumber < this._films.length) {
       this._films
@@ -95,7 +97,7 @@ export default class FilmList {
   _renderExtraFilms(title, extraFilms) {
     const extraFilmListComponent = new ExtraFilmsListView(title);
 
-    render(this._filmsViewComponent, extraFilmListComponent);
+    render(this._filmsComponent, extraFilmListComponent);
     const extraContainerElement = extraFilmListComponent.getElement().querySelector(`.films-list__container`);
 
     extraFilms.forEach((film) => {

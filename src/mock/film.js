@@ -4,6 +4,7 @@ import generateTitle from "./title";
 import getRandomPositiveInt from "../helpers/getRandomPositiveInt";
 import getArrayRandomElement from "../helpers/getArrayRandomElement";
 import getArrayRandomElements from "../helpers/getArrayRandomElements";
+import getRandomBoolean from "../helpers/getRandomBoolean";
 import convertArrayToString from "../helpers/convertArrayToString";
 
 const MIN_COMMENT_COUNT = 0;
@@ -154,8 +155,8 @@ export const generateFilm = () => {
     shortDescription: trimDescription(description),
     rating: generateRating(),
     comments: generateComments(MIN_COMMENT_COUNT, MAX_COMMENT_COUNT),
-    inWatchListCollection: !!getRandomPositiveInt(1),
-    inWatchedCollection: !!getRandomPositiveInt(1),
-    inFavoriteCollection: !!getRandomPositiveInt(1),
+    inWatchListCollection: getRandomBoolean(),
+    inWatchedCollection: getRandomBoolean(),
+    inFavoriteCollection: getRandomBoolean(),
   };
 };
