@@ -1,5 +1,7 @@
 import convertArrayToString from "../helpers/convertArrayToString";
-import createPopupGenres from "../createPopupGenres";
+import createPopupElements from "../createPopupElements";
+import PopupCommentView from "../view/popup-comment";
+import PopupGenreView from "../view/popup-genre";
 import AbstractView from "./abstract.js";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
@@ -52,7 +54,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${createPopupGenres(genres)}</td>
+                  <td class="film-details__cell">${createPopupElements(genres, PopupGenreView)}</td>
                 </tr>
               </table>
               <p class="film-details__film-description">
@@ -72,7 +74,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-            <ul class="film-details__comments-list"></ul>
+            <ul class="film-details__comments-list">${createPopupElements(comments, PopupCommentView)}</ul>
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label"></div>
               <label class="film-details__comment-label">

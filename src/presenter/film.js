@@ -1,5 +1,4 @@
 import {remove, replace, render} from "../utils/render";
-import PopupCommentView from "../view/popup-comment";
 import CardView from "../view/film-card";
 
 export default class Film {
@@ -44,11 +43,6 @@ export default class Film {
     this._popupComponent.setAddToWatchListChangeHandler(this._popupFilmControlButtonClickHandler);
     this._popupComponent.setMarkAsWatchedChangeHandler(this._popupFilmControlButtonClickHandler);
     this._popupComponent.setFavoriteChangeHandler(this._popupFilmControlButtonClickHandler);
-    this._popupCommentsListElement = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
-
-    this._film.comments.forEach((comment) => {
-      render(this._popupCommentsListElement, new PopupCommentView(comment));
-    });
 
     document.addEventListener(`keydown`, this._popupEscKeyDownHandler);
     document.body.appendChild(this._popupComponent.getElement());
