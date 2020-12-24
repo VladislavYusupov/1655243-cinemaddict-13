@@ -1,6 +1,7 @@
-import {render, remove} from "../utils/render";
+import {remove, render} from "../utils/render";
 import FilmsView from "../view/films";
 import FilmListView from "../view/film-list";
+import FilmListContainerView from "../view/film-list-container";
 import PopupView from "../view/popup";
 import EmptyFilmsView from "../view/empty-films";
 import ExtraFilmsListView from "../view/extra-films-list";
@@ -21,10 +22,11 @@ export default class FilmList {
     this._filmsContainer = filmsContainer;
 
     this._filmsComponent = new FilmsView();
-    this._flimListComponent = new FilmListView();
+    this._filmListComponent = new FilmListView();
+    this._filmListContainerComponent = new FilmListContainerView();
     this._emptyFilmsComponent = new EmptyFilmsView();
     this._popupComponent = new PopupView();
-    this._showMoreButtonComponent = new ShowMoreButtonView();
+    this._showMoreButtonComponent = null;
 
     this._filmPresentersMap = new Map();
     this._topRatedFilmPresentersMap = new Map();
@@ -40,12 +42,12 @@ export default class FilmList {
 
     if (this._films.length > 0) {
       render(this._filmsContainer, this._filmsComponent);
-      render(this._filmsComponent, this._flimListComponent);
+      render(this._filmsComponent, this._filmListComponent);
+      render(this._filmListComponent, this._filmListContainerComponent);
       this._renderFilmsRow();
 
       if (this._filmsRenderedNumber < this._films.length) {
-        render(this._flimListComponent, this._showMoreButtonComponent);
-        this._showMoreButtonComponent.setClickHandler(this._showMoreButtonClickHandler);
+        this._renderShowMoreButton();
       }
 
       this._renderExtraFilms(ExtraFilmNames.TOP_RATED, this._getTopRatedFilms());
@@ -56,18 +58,27 @@ export default class FilmList {
   }
 
   _renderFilmsRow() {
-    this._filmListContainerElement = this._filmsComponent.getElement().querySelector(`.films-list__container`);
-
     if (this._filmsRenderedNumber < this._films.length) {
       this._films
         .slice(this._filmsRenderedNumber, this._filmsRenderedNumber + MAX_FILMS_PER_LINE)
         .forEach((film) => {
-          const filmPresenter = new FilmPresenter(this._filmListContainerElement, this._popupComponent, this._handleFilmChange);
+          const filmPresenter = new FilmPresenter(this._filmListContainerComponent.getElement(), this._popupComponent, this._handleFilmChange);
           filmPresenter.init(film);
           this._filmsRenderedNumber++;
           this._filmPresentersMap.set(film.id, filmPresenter);
         });
     }
+  }
+
+  _renderShowMoreButton() {
+    if (this._showMoreButtonComponent !== null) {
+      this._showMoreButtonComponent = null;
+    }
+
+    this._showMoreButtonComponent = new ShowMoreButtonView();
+    this._showMoreButtonComponent.setClickHandler(this._showMoreButtonClickHandler);
+
+    render(this._filmListComponent, this._showMoreButtonComponent);
   }
 
   _showMoreButtonClickHandler() {
@@ -96,12 +107,13 @@ export default class FilmList {
 
   _renderExtraFilms(title, extraFilms) {
     const extraFilmListComponent = new ExtraFilmsListView(title);
+    const extraFilmListContainerComponent = new FilmListContainerView();
 
     render(this._filmsComponent, extraFilmListComponent);
-    const extraContainerElement = extraFilmListComponent.getElement().querySelector(`.films-list__container`);
+    render(extraFilmListComponent, extraFilmListContainerComponent);
 
     extraFilms.forEach((film) => {
-      const extraFilmPresenter = new FilmPresenter(extraContainerElement, this._popupComponent, this._handleFilmChange);
+      const extraFilmPresenter = new FilmPresenter(extraFilmListContainerComponent.getElement(), this._popupComponent, this._handleFilmChange);
       extraFilmPresenter.init(film);
 
       switch (title) {
