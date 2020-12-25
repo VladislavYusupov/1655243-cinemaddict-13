@@ -1,8 +1,10 @@
 import convertArrayToString from "../helpers/convertArrayToString";
-import createPopupGenres from "../createPopupGenres";
+import createPopupElements from "../createPopupElements";
+import PopupCommentView from "../view/popup-comment";
+import PopupGenreView from "../view/popup-genre";
 import AbstractView from "./abstract.js";
 
-const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments}) => {
+const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -52,7 +54,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${createPopupGenres(genres)}</td>
+                  <td class="film-details__cell">${createPopupElements(genres, PopupGenreView)}</td>
                 </tr>
               </table>
               <p class="film-details__film-description">
@@ -61,18 +63,18 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
             </div>
           </div>
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${inWatchListCollection ? ` checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${inWatchedCollection ? ` checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${inFavoriteCollection ? ` checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
-            <ul class="film-details__comments-list"></ul>
+            <ul class="film-details__comments-list">${createPopupElements(comments, PopupCommentView)}</ul>
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label"></div>
               <label class="film-details__comment-label">
@@ -107,7 +109,10 @@ export default class Popup extends AbstractView {
   constructor() {
     super();
     this._film = null;
-    this._clickHandler = this._clickHandler.bind(this);
+    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
+    this._addToWatchListChangeHandler = this._addToWatchListChangeHandler.bind(this);
+    this._markAsWatchedChangeHandler = this._markAsWatchedChangeHandler.bind(this);
+    this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
   }
 
   setFilm(film) {
@@ -118,12 +123,45 @@ export default class Popup extends AbstractView {
     return createPopupTemplate(this._film);
   }
 
-  setClickHandler(callback) {
+  setCloseButtonClickHandler(callback) {
     this._callback.click = callback;
-    this.getElement().addEventListener(`click`, this._clickHandler);
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
   }
 
-  _clickHandler(evt) {
+  setAddToWatchListChangeHandler(callback) {
+    this._callback.addToWatchListClick = callback;
+    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._addToWatchListChangeHandler);
+  }
+
+  setMarkAsWatchedChangeHandler(callback) {
+    this._callback.markAsWatchedClick = callback;
+    this.getElement().querySelector(`#watched`).addEventListener(`change`, this._markAsWatchedChangeHandler);
+  }
+
+  setFavoriteChangeHandler(callback) {
+    this._callback.favoriteClick = callback;
+    this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._favoriteChangeHandler);
+  }
+
+  _addToWatchListChangeHandler(evt) {
+    evt.preventDefault();
+    this._film.inWatchListCollection = !this._film.inWatchListCollection;
+    this._callback.addToWatchListClick();
+  }
+
+  _markAsWatchedChangeHandler(evt) {
+    evt.preventDefault();
+    this._film.inWatchedCollection = !this._film.inWatchedCollection;
+    this._callback.markAsWatchedClick();
+  }
+
+  _favoriteChangeHandler(evt) {
+    evt.preventDefault();
+    this._film.inFavoriteCollection = !this._film.inFavoriteCollection;
+    this._callback.favoriteClick();
+  }
+
+  _closeButtonClickHandler(evt) {
     evt.preventDefault();
     this._callback.click();
   }
