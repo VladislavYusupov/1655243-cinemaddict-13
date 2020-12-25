@@ -1,4 +1,4 @@
-import {remove, render} from "../utils/render";
+import {remove, replace, render} from "../utils/render";
 import FilmsView from "../view/films";
 import FilmListView from "../view/film-list";
 import FilmListContainerView from "../view/film-list-container";
@@ -29,6 +29,7 @@ export default class FilmList {
     this._filmListContainerComponent = new FilmListContainerView();
     this._emptyFilmsComponent = new EmptyFilmsView();
     this._popupComponent = new PopupView();
+    this._sortComponent = new SortView();
     this._showMoreButtonComponent = null;
 
     this._filmPresentersMap = new Map();
@@ -46,6 +47,8 @@ export default class FilmList {
     this._filmsRenderedNumber = 0;
 
     this._sortComponent.setClickHandler(this._handleSortTypeChange);
+    render(this._filmsContainer, this._sortComponent);
+
     this._renderFilms();
   }
 
@@ -190,6 +193,9 @@ export default class FilmList {
   _clearFilms() {
     this._filmPresentersMap.clear();
     this._filmsRenderedNumber = 0;
+
     remove(this._filmsComponent);
+    remove(this._filmListComponent);
+    remove(this._filmListContainerComponent);
   }
 }
