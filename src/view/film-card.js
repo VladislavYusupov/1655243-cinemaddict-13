@@ -1,14 +1,15 @@
 import AbstractView from "./abstract.js";
+import dayjs from "dayjs";
 
-const createCardTemplate = ({title, poster, shortDescription, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
+const createCardTemplate = ({title, poster, shortDescription, rating, releaseDate, runtime, genres, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
   return `
     <article class="film-card">
       <h3 class="film-card__title">${title}</h3>
       <p class="film-card__rating">${rating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">1929</span>
-        <span class="film-card__duration">1h 55m</span>
-        <span class="film-card__genre">Musical</span>
+        <span class="film-card__year">${dayjs(releaseDate).year()}</span>
+        <span class="film-card__duration">${runtime}</span>
+        <span class="film-card__genre">${genres[0]}</span>
       </p>
       <img src="./images/posters/${poster}" alt="${title}" class="film-card__poster">
       <p class="film-card__description">${shortDescription}</p>

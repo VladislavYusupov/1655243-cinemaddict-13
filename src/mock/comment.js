@@ -1,5 +1,8 @@
 import getRandomInteger from "../helpers/getRandomInteger";
 import getArrayRandomElement from "../helpers/getArrayRandomElement";
+import getRandomDate from "../helpers/getRandomDate";
+
+const MIN_COMMENT_YEAR = 1950;
 
 const MESSAGES = [
   `Interesting setting and a good cast`,
@@ -24,14 +27,6 @@ const AUTHORS = [
   `John John Doe`,
 ];
 
-const DATES = [
-  `2014/12/31 23:59`,
-  `2011/05/03 08:15`,
-  `2005/04/20 16:34`,
-  `2020/09/29 22:09`,
-  `2000/01/01 00:01`,
-];
-
 const generateComments = (minCommentCount, maxCommentCount) => {
   return new Array(getRandomInteger(minCommentCount, maxCommentCount))
     .fill({})
@@ -40,7 +35,7 @@ const generateComments = (minCommentCount, maxCommentCount) => {
         message: getArrayRandomElement(MESSAGES),
         emoji: getArrayRandomElement(EMOJIS),
         author: getArrayRandomElement(AUTHORS),
-        date: getArrayRandomElement(DATES),
+        date: getRandomDate(MIN_COMMENT_YEAR),
       };
     });
 };
