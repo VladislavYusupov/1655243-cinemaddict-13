@@ -9,7 +9,7 @@ const createEmojiImage = (emoji) => {
   return emoji ? `<img src="./images/emoji/${emoji}.png" width="50" height="50" alt="emoji-${emoji}">` : ``;
 };
 
-const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null}) => {
+const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -83,7 +83,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label">${createEmojiImage(emojiSelected)}</div>
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ``}</textarea>
               </label>
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
@@ -119,6 +119,7 @@ export default class Popup extends SmartView {
     this._markAsWatchedChangeHandler = this._markAsWatchedChangeHandler.bind(this);
     this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
     this._changeEmojiHandler = this._changeEmojiHandler.bind(this);
+    this._inputNewCommentHandler = this._inputNewCommentHandler.bind(this);
   }
 
   setFilm(film) {
@@ -177,9 +178,23 @@ export default class Popup extends SmartView {
     this.getElement()
       .querySelector(`.film-details__emoji-list`)
       .addEventListener(`change`, this._changeEmojiHandler);
+
+    this.getElement()
+      .querySelector(`.film-details__comment-input`)
+      .addEventListener(`input`, this._inputNewCommentHandler);
+  }
+
+  _inputNewCommentHandler(evt) {
+    evt.preventDefault();
+
+    this.updateData({
+      newComment: evt.target.value
+    }, true);
   }
 
   _changeEmojiHandler(evt) {
+    evt.preventDefault();
+
     if (evt.target.classList.contains(`film-details__emoji-item`)) {
       if (this._data.emojiSelected !== undefined && this._data.emojiSelected === evt.target.value) {
         return;
@@ -187,7 +202,9 @@ export default class Popup extends SmartView {
 
       const popupScrollTop = this.getElement().scrollTop;
 
-      this.updateData({emojiSelected: evt.target.value});
+      this.updateData({
+        emojiSelected: evt.target.value
+      });
       this.getElement().scrollTop = popupScrollTop;
     }
   }
