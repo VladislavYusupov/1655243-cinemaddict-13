@@ -1,13 +1,11 @@
 import convertArrayToString from "../helpers/convertArrayToString";
 import createPopupElements from "../createPopupElements";
+import createPopupElement from "../createPopupElement";
 import PopupCommentView from "../view/popup-comment";
 import PopupGenreView from "../view/popup-genre";
+import EmojiImageView from "./popup-comment-emoji";
 import SmartView from "./smart";
 import dayjs from "dayjs";
-
-const createEmojiImage = (emoji) => {
-  return emoji ? `<img src="./images/emoji/${emoji}.png" width="50" height="50" alt="emoji-${emoji}">` : ``;
-};
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
   return `
@@ -81,7 +79,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
             <ul class="film-details__comments-list">${createPopupElements(comments, PopupCommentView)}</ul>
             <div class="film-details__new-comment">
-              <div class="film-details__add-emoji-label">${createEmojiImage(emojiSelected)}</div>
+              <div class="film-details__add-emoji-label">${createPopupElement(emojiSelected, EmojiImageView)}</div>
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ``}</textarea>
               </label>
