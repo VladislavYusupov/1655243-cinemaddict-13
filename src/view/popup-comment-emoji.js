@@ -1,7 +1,7 @@
 import AbstractView from "./abstract.js";
 
 const createEmojiImageTemplate = (emoji) => {
-  return emoji ? `<img src="./images/emoji/${emoji}.png" width="50" height="50" alt="emoji-${emoji}">` : ``;
+  return emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
 };
 
 export default class EmojiImage extends AbstractView {

@@ -193,16 +193,18 @@ export default class Popup extends SmartView {
 
   _changeEmojiHandler(evt) {
     evt.preventDefault();
+    const emojiSelectedProperty = `emojiSelected`;
+    const emojiSelectedValue = evt.target.value;
 
     if (evt.target.classList.contains(`film-details__emoji-item`)) {
-      if (this._data.emojiSelected !== undefined && this._data.emojiSelected === evt.target.value) {
+      if (emojiSelectedProperty in this._data && this._data.emojiSelected === emojiSelectedValue) {
         return;
       }
 
       const popupScrollTop = this.getElement().scrollTop;
 
       this.updateData({
-        emojiSelected: evt.target.value
+        emojiSelected: emojiSelectedValue
       });
       this.getElement().scrollTop = popupScrollTop;
     }
@@ -210,7 +212,6 @@ export default class Popup extends SmartView {
 
   restoreHandlers() {
     this._setInnerHandlers();
-
     this.setCloseButtonClickHandler(this._callback.click);
     this.setAddToWatchListChangeHandler(this._callback.addToWatchListClick);
     this.setMarkAsWatchedChangeHandler(this._callback.markAsWatchedClick);
