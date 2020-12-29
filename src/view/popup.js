@@ -3,10 +3,11 @@ import createPopupElements from "../createPopupElements";
 import createPopupElement from "../createPopupElement";
 import PopupCommentView from "../view/popup-comment";
 import PopupGenreView from "../view/popup-genre";
-import {POPUP_RELEASE_DATE_FORMAT} from "../const";
+import {FILM_RELEASE_DATE_FORMAT} from "../const";
 import EmojiImageView from "./popup-comment-emoji";
 import SmartView from "./smart";
 import dayjs from "dayjs";
+import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
   return `
@@ -46,11 +47,11 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${dayjs(releaseDate).format(POPUP_RELEASE_DATE_FORMAT)}</td>
+                  <td class="film-details__cell">${dayjs(releaseDate).format(FILM_RELEASE_DATE_FORMAT)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
-                  <td class="film-details__cell">${runtime}</td>
+                  <td class="film-details__cell">${getFormattedFilmRuntime(runtime)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Country</td>

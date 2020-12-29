@@ -1,8 +1,10 @@
 import AbstractView from "./abstract.js";
-import {POPUP_COMMENT_DAY_FORMAT} from "../const";
 import EmojiImageView from "./popup-comment-emoji";
 import createPopupElement from "../createPopupElement";
+import relativeTime from "dayjs/plugin/relativeTime";
 import dayjs from "dayjs";
+
+dayjs.extend(relativeTime);
 
 const createPopupCommentTemplate = ({message, emoji, author, date}) => {
   return `
@@ -14,7 +16,7 @@ const createPopupCommentTemplate = ({message, emoji, author, date}) => {
         <p class="film-details__comment-text">${message}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
-          <span class="film-details__comment-day">${dayjs(date).format(POPUP_COMMENT_DAY_FORMAT)}</span>
+          <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
           <button class="film-details__comment-delete">Delete</button>
         </p>
       </div>
