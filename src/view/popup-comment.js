@@ -1,12 +1,14 @@
 import AbstractView from "./abstract.js";
 import {POPUP_COMMENT_DAY_FORMAT} from "../const";
+import EmojiImageView from "./popup-comment-emoji";
+import createPopupElement from "../createPopupElement";
 import dayjs from "dayjs";
 
 const createPopupCommentTemplate = ({message, emoji, author, date}) => {
   return `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">
+        ${createPopupElement(emoji, EmojiImageView)}
       </span>
       <div>
         <p class="film-details__comment-text">${message}</p>
