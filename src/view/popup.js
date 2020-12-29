@@ -3,6 +3,7 @@ import createPopupElements from "../createPopupElements";
 import PopupCommentView from "../view/popup-comment";
 import PopupGenreView from "../view/popup-genre";
 import AbstractView from "./abstract.js";
+import {POPUP_RELEASE_DATE_FORMAT} from "../const";
 import dayjs from "dayjs";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection}) => {
@@ -43,7 +44,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Release Date</td>
-                  <td class="film-details__cell">${dayjs(releaseDate).format(`D MMMM YYYY`)}</td>
+                  <td class="film-details__cell">${dayjs(releaseDate).format(POPUP_RELEASE_DATE_FORMAT)}</td>
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Runtime</td>
