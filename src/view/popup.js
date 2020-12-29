@@ -3,7 +3,6 @@ import createPopupElements from "../createPopupElements";
 import createPopupElement from "../createPopupElement";
 import PopupCommentView from "../view/popup-comment";
 import PopupGenreView from "../view/popup-genre";
-import AbstractView from "./abstract.js";
 import {POPUP_RELEASE_DATE_FORMAT} from "../const";
 import EmojiImageView from "./popup-comment-emoji";
 import SmartView from "./smart";
