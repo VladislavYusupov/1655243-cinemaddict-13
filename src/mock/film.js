@@ -6,6 +6,7 @@ import getArrayRandomElement from "../helpers/getArrayRandomElement";
 import getArrayRandomElements from "../helpers/getArrayRandomElements";
 import getRandomBoolean from "../helpers/getRandomBoolean";
 import convertArrayToString from "../helpers/convertArrayToString";
+import getRandomDate from "../helpers/getRandomDate";
 
 const MIN_COMMENT_COUNT = 0;
 const MAX_COMMENT_COUNT = 5;
@@ -20,6 +21,7 @@ const MIN_GENRES_COUNT = 1;
 const MAX_GENRES_COUNT = 3;
 const FRACTIONAL_CHARACTERS_NUMBER_IN_RATING = 1;
 const MAX_RATING = 10;
+const MIN_RELEASE_YEAR = 1950;
 const DESCRIPTION_MAX_LENGTH = 140;
 
 const POSTERS = [
@@ -75,13 +77,6 @@ const ACTORS = [
   `Tom Cruise`,
   `Hellen Mirren`,
   `Nicole Kidman`,
-];
-
-const RELEASE_DATES = [
-  `30 March 1945`,
-  `2 January 2007`,
-  `5 December 1998`,
-  `10 August 2015`,
 ];
 
 const RUNTIMES = [
@@ -145,7 +140,7 @@ export const generateFilm = () => {
     director: getArrayRandomElement(DIRECTORS),
     writers: getArrayRandomElements(WRITERS, MIN_WRITERS_COUNT, MAX_WRITERS_COUNT),
     actors: getArrayRandomElements(ACTORS, MIN_ACTORS_COUNT, MAX_ACTORS_COUNT),
-    releaseDate: getArrayRandomElement(RELEASE_DATES),
+    releaseDate: getRandomDate(MIN_RELEASE_YEAR),
     runtime: getArrayRandomElement(RUNTIMES),
     country: getArrayRandomElement(COUNTRIES),
     genres: getArrayRandomElements(GENRES, MIN_GENRES_COUNT, MAX_GENRES_COUNT),
