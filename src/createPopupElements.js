@@ -1,14 +1,10 @@
-import AbstractView from "./view/abstract.js";
+import createPopupElement from "./createPopupElement";
 
 const createPopupElements = (elements, View) => {
-  if (View.prototype instanceof AbstractView === false) {
-    throw new Error(`The view must be instance of the abstract`);
-  }
-
   let elementTemplates = [];
 
   for (const element of elements) {
-    const elementTemplate = new View(element).getTemplate();
+    const elementTemplate = createPopupElement(element, View);
     elementTemplates.push(elementTemplate);
   }
 
