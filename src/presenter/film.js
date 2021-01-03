@@ -1,14 +1,12 @@
 import {remove, replace, render} from "../utils/render";
 import {UserAction, UpdateType} from "../const.js";
 import CardView from "../view/film-card";
-import PopupPresenter from "./popup";
 
 export default class Film {
-  constructor(filmContainer, popupComponent, changeData) {
+  constructor(filmContainer, popupPresenter, changeData) {
     this._filmContainer = filmContainer;
-    this._popupComponent = popupComponent;
+    this._popupPresenter = popupPresenter;
     this._filmCardComponent = null;
-    this._popupPresenter = null;
     this._changeData = changeData;
 
     this._filmCardInfoClickHandler = this._filmCardInfoClickHandler.bind(this);
@@ -39,14 +37,19 @@ export default class Film {
     remove(previousFilmCardComponent);
   }
 
-  _filmCardInfoClickHandler() {
-    this._popupPresenter = new PopupPresenter(
-        this._popupComponent,
-        this._changeData,
-        this._handleAddToWatchListClick,
-        this._handleMarkAsWatchedClick,
-        this._handleFavoriteClick);
+  // здесь планировал обрабатывать действия для комментариев, только пока не понял как работать с моделью и стоит ли создавать метод в этом месте
+  // _handleViewAction(actionType, updateType, update) {
+  //   switch (actionType) {
+  //     case UserAction.ADD_COMMENT:
+  //       // this._filmsModel.updateFilm(updateType, update);
+  //       break;
+  //     case UserAction.DELETE_COMMENT:
+  //       // this._filmsModel.updateFilm(updateType, update);
+  //       break;
+  //   }
+  // }
 
+  _filmCardInfoClickHandler() {
     this._popupPresenter.init(this._film);
   }
 

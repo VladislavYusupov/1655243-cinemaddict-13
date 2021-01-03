@@ -2,17 +2,17 @@ import {remove} from "../utils/render";
 import {UserAction, UpdateType} from "../const.js";
 
 export default class Popup {
-  constructor(popupComponent, changeData, handleAddToWatchListClick, handleMarkAsWatchedClick, handleFavoriteClick) {
+  constructor(popupComponent, changeData) {
     this._popupComponent = popupComponent;
     this._changeData = changeData;
-    this._handleAddToWatchListClick = handleAddToWatchListClick;
-    this._handleMarkAsWatchedClick = handleMarkAsWatchedClick;
-    this._handleFavoriteClick = handleFavoriteClick;
 
     this._popupCloseButtonClickHandler = this._popupCloseButtonClickHandler.bind(this);
     this._popupEscKeyDownHandler = this._popupEscKeyDownHandler.bind(this);
     this._handlePopupCommentSubmit = this._handlePopupCommentSubmit.bind(this);
     this._handlePopupCommentDelete = this._handlePopupCommentDelete.bind(this);
+    this._handleAddToWatchListClick = this._handleAddToWatchListClick.bind(this);
+    this._handleMarkAsWatchedClick = this._handleAddToWatchListClick.bind(this);
+    this._handleFavoriteClick = this._handleAddToWatchListClick.bind(this);
   }
 
   init(film) {
@@ -28,6 +28,29 @@ export default class Popup {
     document.addEventListener(`keydown`, this._popupEscKeyDownHandler);
     document.body.appendChild(this._popupComponent.getElement());
     document.body.classList.add(`hide-overflow`);
+  }
+
+  _handleAddToWatchListClick(film) {
+    const updateType = film.inWatchListCollection ? UpdateType.MINOR : UpdateType.PATCH;
+    this._changeDataAfterClick(updateType, film);
+  }
+
+  _handleMarkAsWatchedClick(film) {
+    const updateType = film.inWatchedCollection ? UpdateType.MINOR : UpdateType.PATCH;
+    this._changeDataAfterClick(updateType, film);
+  }
+
+  _handleFavoriteClick(film) {
+    const updateType = film.inFavoriteCollection ? UpdateType.MINOR : UpdateType.PATCH;
+    this._changeDataAfterClick(updateType, film);
+  }
+
+  _changeDataAfterClick(updateType, film) {
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        updateType,
+        Object.assign({}, film)
+    );
   }
 
   _handlePopupCommentSubmit() {

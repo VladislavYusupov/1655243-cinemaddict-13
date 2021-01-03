@@ -193,7 +193,6 @@ export default class Popup extends SmartView {
   }
 
   _commentDeleteHandler(evt) {
-
     evt.preventDefault();
     if (evt.target.classList.contains(`film-details__comment-delete`)) {
       const commentIndex = this._data.comments.findIndex((comment) => {
@@ -220,17 +219,29 @@ export default class Popup extends SmartView {
 
   _addToWatchListChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.addToWatchListClick();
+    this.updateData({
+      inWatchListCollection: !this._data.inWatchListCollection
+    }, true);
+
+    this._callback.addToWatchListClick(Popup.parseDataToFilm(this._data));
   }
 
   _markAsWatchedChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.markAsWatchedClick();
+    this.updateData({
+      inWatchedCollection: !this._data.inWatchedCollection
+    }, true);
+
+    this._callback.markAsWatchedClick(Popup.parseDataToFilm(this._data));
   }
 
   _favoriteChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this.updateData({
+      inFavoriteCollection: !this._data.inFavoriteCollection
+    }, true);
+
+    this._callback.favoriteClick(Popup.parseDataToFilm(this._data));
   }
 
   _closeButtonClickHandler(evt) {
@@ -283,5 +294,14 @@ export default class Popup extends SmartView {
     this.setFavoriteChangeHandler(this._callback.favoriteClick);
     this.setCommentSubmitHandler(this._callback.submitComment);
     this.setCommentDeleteHandler(this._callback.deleteComment);
+  }
+
+  static parseDataToFilm(data) {
+    data = Object.assign({}, data);
+
+    delete data.emojiSelected;
+    delete data.newComment;
+
+    return data;
   }
 }

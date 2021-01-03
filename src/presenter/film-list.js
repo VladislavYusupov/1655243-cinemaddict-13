@@ -10,6 +10,7 @@ import ShowMoreButtonView from "../view/show-more-button";
 import FilmPresenter from "./film";
 import {SortTypes, UserAction, UpdateType} from "../const";
 import {filter} from "../utils/filter";
+import PopupPresenter from "./popup";
 
 const MAX_FILMS_PER_LINE = 5;
 const MAX_EXTRA_FILMS_COUNT = 2;
@@ -48,6 +49,7 @@ export default class FilmList {
 
   init() {
     this._filmsRenderedNumber = 0;
+    this._popupPresenter = new PopupPresenter(new PopupView(), this._handleViewAction);
 
     this._renderSort();
     this._renderFilms();
@@ -82,11 +84,6 @@ export default class FilmList {
       case UserAction.UPDATE_FILM:
         this._filmsModel.updateFilm(updateType, update);
         break;
-      case UserAction.ADD_COMMENT:
-        this._filmsModel.updateFilm(updateType, update);
-        break;
-      case UserAction.DELETE_COMMENT:
-        this._filmsModel.updateFilm(updateType, update);
     }
   }
 
@@ -160,7 +157,7 @@ export default class FilmList {
       this._getFilms()
         .slice(this._filmsRenderedNumber, this._filmsRenderedNumber + MAX_FILMS_PER_LINE)
         .forEach((film) => {
-          const filmPresenter = new FilmPresenter(this._filmListContainerComponent.getElement(), this._popupComponent, this._handleViewAction);
+          const filmPresenter = new FilmPresenter(this._filmListContainerComponent.getElement(), this._popupPresenter, this._handleViewAction);
           filmPresenter.init(film);
           this._filmsRenderedNumber++;
           this._filmPresentersMap.set(film.id, filmPresenter);
@@ -211,7 +208,7 @@ export default class FilmList {
     render(extraFilmListComponent, extraFilmListContainerComponent);
 
     extraFilms.forEach((film) => {
-      const extraFilmPresenter = new FilmPresenter(extraFilmListContainerComponent.getElement(), this._popupComponent, this._handleViewAction);
+      const extraFilmPresenter = new FilmPresenter(extraFilmListContainerComponent.getElement(), this._popupPresenter, this._handleViewAction);
       extraFilmPresenter.init(film);
 
       switch (title) {
