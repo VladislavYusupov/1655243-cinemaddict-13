@@ -16,6 +16,8 @@ export default class Film {
     this._handleAddToWatchListClick = this._handleAddToWatchListClick.bind(this);
     this._handleMarkAsWatchedClick = this._handleMarkAsWatchedClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
+    this._handlePopupCommentSubmit = this._handlePopupCommentSubmit.bind(this);
+    this._handlePopupCommentDelete = this._handlePopupCommentDelete.bind(this);
   }
 
   init(film) {
@@ -46,6 +48,8 @@ export default class Film {
     this._popupComponent.setAddToWatchListChangeHandler(this._handleAddToWatchListClick);
     this._popupComponent.setMarkAsWatchedChangeHandler(this._handleMarkAsWatchedClick);
     this._popupComponent.setFavoriteChangeHandler(this._handleFavoriteClick);
+    this._popupComponent.setCommentSubmitHandler(this._handlePopupCommentSubmit);
+    this._popupComponent.setCommentDeleteHandler(this._handlePopupCommentDelete);
 
     document.addEventListener(`keydown`, this._popupEscKeyDownHandler);
     document.body.appendChild(this._popupComponent.getElement());
@@ -100,6 +104,34 @@ export default class Film {
     );
   }
 
+  _handlePopupCommentSubmit() {
+    this._changeData(
+        UserAction.ADD_COMMENT,
+        UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._film,
+            {
+              comments: this._film.comments
+            }
+        )
+    );
+  }
+
+  _handlePopupCommentDelete() {
+    this._changeData(
+        UserAction.DELETE_COMMENT,
+        UpdateType.MINOR,
+        Object.assign(
+            {},
+            this._film,
+            {
+              comments: this._film.comments
+            }
+        )
+    );
+  }
+
   _filmCardControlClickHandler() {
     this._handleFilmChange(this._film);
   }
@@ -116,8 +148,4 @@ export default class Film {
       this._popupCloseButtonClickHandler();
     }
   }
-
-  // _popupFilmControlButtonClickHandler() {
-  //   this._handleFilmChange(this._film);
-  // }
 }

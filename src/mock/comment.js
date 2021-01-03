@@ -1,6 +1,7 @@
 import getRandomInteger from "../helpers/getRandomInteger";
 import getArrayRandomElement from "../helpers/getArrayRandomElement";
 import getRandomDate from "../helpers/getRandomDate";
+import {nanoid} from "nanoid";
 
 const MIN_COMMENT_YEAR = 1950;
 
@@ -32,6 +33,7 @@ const generateComments = (minCommentCount, maxCommentCount) => {
     .fill({})
     .map(() => {
       return {
+        id: nanoid(),
         message: getArrayRandomElement(MESSAGES),
         emoji: getArrayRandomElement(EMOJIS),
         author: getArrayRandomElement(AUTHORS),

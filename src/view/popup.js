@@ -8,6 +8,7 @@ import EmojiImageView from "./popup-comment-emoji";
 import SmartView from "./smart";
 import dayjs from "dayjs";
 import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
+import {nanoid} from "nanoid";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
   return `
@@ -120,6 +121,8 @@ export default class Popup extends SmartView {
     this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
     this._changeEmojiHandler = this._changeEmojiHandler.bind(this);
     this._inputNewCommentHandler = this._inputNewCommentHandler.bind(this);
+    this._submitCommentHandler = this._submitCommentHandler.bind(this);
+    this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
   }
 
   setFilm(film) {
@@ -149,6 +152,69 @@ export default class Popup extends SmartView {
   setFavoriteChangeHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._favoriteChangeHandler);
+  }
+
+  setCommentSubmitHandler(callback) {
+    this._callback.submitComment = callback;
+    document.addEventListener(`keydown`, this._submitCommentHandler);
+  }
+
+  setCommentDeleteHandler(callback) {
+    this._callback.deleteComment = callback;
+    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._commentDeleteHandler);
+  }
+
+  _submitCommentHandler(evt) {
+    if (evt.ctrlKey && evt.key === `Enter`) {
+      evt.preventDefault();
+      const message = this._data.newComment;
+      const emoji = this._data.emojiSelected;
+
+      if (message && emoji) {
+        this._data.comments.push({
+          id: nanoid(),
+          message,
+          emoji,
+          author: `author`,
+          date: dayjs()
+        });
+
+        this._data.emojiSelected = null;
+        this._data.newComment = null;
+
+        this._setScrollTop();
+        this.updateData(this._data);
+        this._updateScrollTop();
+
+        this._callback.submitComment();
+      }
+    }
+  }
+
+  _commentDeleteHandler(evt) {
+
+    evt.preventDefault();
+    if (evt.target.classList.contains(`film-details__comment-delete`)) {
+      const commentIndex = this._data.comments.findIndex((comment) => {
+        return comment.id === evt.target.dataset.id;
+      });
+
+      this._data.comments.splice(commentIndex, 1);
+
+      this._setScrollTop();
+      this.updateData(this._data);
+      this._updateScrollTop();
+
+      this._callback.deleteComment();
+    }
+  }
+
+  _updateScrollTop() {
+    this.getElement().scrollTop = this._scrollTop;
+  }
+
+  _setScrollTop() {
+    this._scrollTop = this.getElement().scrollTop;
   }
 
   _addToWatchListChangeHandler(evt) {
@@ -199,12 +265,12 @@ export default class Popup extends SmartView {
         return;
       }
 
-      const popupScrollTop = this.getElement().scrollTop;
+      this._setScrollTop();
 
       this.updateData({
         emojiSelected: emojiSelectedValue
       });
-      this.getElement().scrollTop = popupScrollTop;
+      this._updateScrollTop();
     }
   }
 
@@ -214,5 +280,7 @@ export default class Popup extends SmartView {
     this.setAddToWatchListChangeHandler(this._callback.addToWatchListClick);
     this.setMarkAsWatchedChangeHandler(this._callback.markAsWatchedClick);
     this.setFavoriteChangeHandler(this._callback.favoriteClick);
+    this.setCommentSubmitHandler(this._callback.submitComment);
+    this.setCommentDeleteHandler(this._callback.deleteComment);
   }
 }
