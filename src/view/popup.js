@@ -9,6 +9,7 @@ import SmartView from "./smart";
 import dayjs from "dayjs";
 import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
 import {nanoid} from "nanoid";
+import he from "he";
 
 const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
   return `
@@ -167,7 +168,7 @@ export default class Popup extends SmartView {
   _submitCommentHandler(evt) {
     if (evt.ctrlKey && evt.key === `Enter`) {
       evt.preventDefault();
-      const message = this._data.newComment;
+      const message = he.encode(this._data.newComment);
       const emoji = this._data.emojiSelected;
 
       if (message && emoji) {
