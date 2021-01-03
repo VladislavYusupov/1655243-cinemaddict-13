@@ -1,6 +1,7 @@
 import FilterView from "../view/menu-navigation.js";
 import {render, replace, remove} from "../utils/render.js";
 import {FilterType, UpdateType} from "../const.js";
+import {filter} from "../utils/filter.js";
 
 export default class Filter {
   constructor(filterContainer, filterModel, filmsModel) {
@@ -52,9 +53,9 @@ export default class Filter {
     const films = this._filmsModel.getFilms();
 
     return {
-      [FilterType.WATCHLIST]: films.filter((film) => film.inWatchListCollection === true),
-      [FilterType.HISTORY]: films.filter((film) => film.inWatchedCollection === true),
-      [FilterType.FAVORITES]: films.filter((film) => film.inFavoriteCollection === true)
+      [FilterType.WATCHLIST]: filter[FilterType.WATCHLIST](films).length,
+      [FilterType.HISTORY]: filter[FilterType.HISTORY](films).length,
+      [FilterType.FAVORITES]: filter[FilterType.FAVORITES](films).length
     };
   }
 }

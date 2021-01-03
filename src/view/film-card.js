@@ -27,6 +27,7 @@ export default class Card extends AbstractView {
   constructor(film) {
     super();
     this._film = film;
+
     this._infoClickHandler = this._infoClickHandler.bind(this);
     this._addToWatchListClickHandler = this._addToWatchListClickHandler.bind(this);
     this._markAsWatchedClickHandler = this._markAsWatchedClickHandler.bind(this);
@@ -62,19 +63,16 @@ export default class Card extends AbstractView {
 
   _addToWatchListClickHandler(evt) {
     evt.preventDefault();
-    this._film.inWatchListCollection = !this._film.inWatchListCollection;
     this._callback.addToWatchListClick();
   }
 
   _markAsWatchedClickHandler(evt) {
     evt.preventDefault();
-    this._film.inWatchedCollection = !this._film.inWatchedCollection;
     this._callback.markAsWatchedClick();
   }
 
   _favoriteClickHandler(evt) {
     evt.preventDefault();
-    this._film.inFavoriteCollection = !this._film.inFavoriteCollection;
     this._callback.favoriteClick();
   }
 

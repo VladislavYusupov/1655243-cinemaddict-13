@@ -153,19 +153,16 @@ export default class Popup extends SmartView {
 
   _addToWatchListChangeHandler(evt) {
     evt.preventDefault();
-    this._data.inWatchListCollection = !this._data.inWatchListCollection;
     this._callback.addToWatchListClick();
   }
 
   _markAsWatchedChangeHandler(evt) {
     evt.preventDefault();
-    this._data.inWatchedCollection = !this._data.inWatchedCollection;
     this._callback.markAsWatchedClick();
   }
 
   _favoriteChangeHandler(evt) {
     evt.preventDefault();
-    this._data.inFavoriteCollection = !this._data.inFavoriteCollection;
     this._callback.favoriteClick();
   }
 

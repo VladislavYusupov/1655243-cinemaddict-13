@@ -1,18 +1,21 @@
 import {remove, replace, render} from "../utils/render";
+import {UserAction, UpdateType} from "../const.js";
 import CardView from "../view/film-card";
 
 export default class Film {
-  constructor(filmContainer, popupComponent, handleFilmChange) {
+  constructor(filmContainer, popupComponent, changeData) {
     this._filmContainer = filmContainer;
     this._popupComponent = popupComponent;
     this._filmCardComponent = null;
-    this._handleFilmChange = handleFilmChange;
+    this._changeData = changeData;
 
     this._filmCardInfoClickHandler = this._filmCardInfoClickHandler.bind(this);
     this._popupCloseButtonClickHandler = this._popupCloseButtonClickHandler.bind(this);
     this._popupEscKeyDownHandler = this._popupEscKeyDownHandler.bind(this);
     this._filmCardControlClickHandler = this._filmCardControlClickHandler.bind(this);
-    this._popupFilmControlButtonClickHandler = this._popupFilmControlButtonClickHandler.bind(this);
+    this._handleAddToWatchListClick = this._handleAddToWatchListClick.bind(this);
+    this._handleMarkAsWatchedClick = this._handleMarkAsWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {
@@ -21,9 +24,9 @@ export default class Film {
 
     this._filmCardComponent = new CardView(this._film);
     this._filmCardComponent.setInfoClickHandler(this._filmCardInfoClickHandler);
-    this._filmCardComponent.setAddToWatchListClickHandler(this._filmCardControlClickHandler);
-    this._filmCardComponent.setMarkAsWatchedClickHandler(this._filmCardControlClickHandler);
-    this._filmCardComponent.setFavoriteClickHandler(this._filmCardControlClickHandler);
+    this._filmCardComponent.setAddToWatchListClickHandler(this._handleAddToWatchListClick);
+    this._filmCardComponent.setMarkAsWatchedClickHandler(this._handleMarkAsWatchedClick);
+    this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (previousFilmCardComponent === null) {
       render(this._filmContainer, this._filmCardComponent);
@@ -40,13 +43,61 @@ export default class Film {
   _filmCardInfoClickHandler() {
     this._popupComponent.setFilm(this._film);
     this._popupComponent.setCloseButtonClickHandler(this._popupCloseButtonClickHandler);
-    this._popupComponent.setAddToWatchListChangeHandler(this._popupFilmControlButtonClickHandler);
-    this._popupComponent.setMarkAsWatchedChangeHandler(this._popupFilmControlButtonClickHandler);
-    this._popupComponent.setFavoriteChangeHandler(this._popupFilmControlButtonClickHandler);
+    this._popupComponent.setAddToWatchListChangeHandler(this._handleAddToWatchListClick);
+    this._popupComponent.setMarkAsWatchedChangeHandler(this._handleMarkAsWatchedClick);
+    this._popupComponent.setFavoriteChangeHandler(this._handleFavoriteClick);
 
     document.addEventListener(`keydown`, this._popupEscKeyDownHandler);
     document.body.appendChild(this._popupComponent.getElement());
     document.body.classList.add(`hide-overflow`);
+  }
+
+  _handleAddToWatchListClick() {
+    const updateType = this._film.inWatchListCollection ? UpdateType.MINOR : UpdateType.PATCH;
+
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        updateType,
+        Object.assign(
+            {},
+            this._film,
+            {
+              inWatchListCollection: !this._film.inWatchListCollection
+            }
+        )
+    );
+  }
+
+  _handleMarkAsWatchedClick() {
+    const updateType = this._film.inWatchedCollection ? UpdateType.MINOR : UpdateType.PATCH;
+
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        updateType,
+        Object.assign(
+            {},
+            this._film,
+            {
+              inWatchedCollection: !this._film.inWatchedCollection
+            }
+        )
+    );
+  }
+
+  _handleFavoriteClick() {
+    const updateType = this._film.inFavoriteCollection ? UpdateType.MINOR : UpdateType.PATCH;
+
+    this._changeData(
+        UserAction.UPDATE_FILM,
+        updateType,
+        Object.assign(
+            {},
+            this._film,
+            {
+              inFavoriteCollection: !this._film.inFavoriteCollection
+            }
+        )
+    );
   }
 
   _filmCardControlClickHandler() {
@@ -66,7 +117,7 @@ export default class Film {
     }
   }
 
-  _popupFilmControlButtonClickHandler() {
-    this._handleFilmChange(this._film);
-  }
+  // _popupFilmControlButtonClickHandler() {
+  //   this._handleFilmChange(this._film);
+  // }
 }
