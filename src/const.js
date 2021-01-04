@@ -1,7 +1,7 @@
-export const SortTypes = {
-  BY_DEFAULT: `default`,
-  BY_DATE: `date`,
-  BY_RATING: `rating`
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
 };
 
 export const UserAction = {

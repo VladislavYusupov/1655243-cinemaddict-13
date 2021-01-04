@@ -37,6 +37,10 @@ export default class Film {
     remove(previousFilmCardComponent);
   }
 
+  destroy() {
+    remove(this._filmCardComponent);
+  }
+
   // здесь планировал обрабатывать действия для комментариев, только пока не понял как работать с моделью и стоит ли создавать метод в этом месте
   // _handleViewAction(actionType, updateType, update) {
   //   switch (actionType) {
