@@ -11,6 +11,7 @@ import FilmPresenter from "./film";
 import {SortType, UserAction, UpdateType} from "../const";
 import {filter} from "../utils/filter";
 import PopupPresenter from "./popup";
+import {sortFilmByRating, sortFilmByComments, sortFilmByReleaseDate} from "../utils/film";
 
 const MAX_FILMS_PER_LINE = 5;
 const MAX_EXTRA_FILMS_COUNT = 2;
@@ -64,14 +65,10 @@ export default class FilmList {
 
     switch (this._currentSortType) {
       case SortType.RATING:
-        filteredFilms.sort(({rating: a}, {rating: b}) => {
-          return b - a;
-        });
+        filteredFilms.sort(sortFilmByRating);
         break;
       case SortType.DATE:
-        filteredFilms.sort(({releaseDate: a}, {releaseDate: b}) => {
-          return b - a;
-        });
+        filteredFilms.sort(sortFilmByReleaseDate);
         break;
     }
 
@@ -161,17 +158,13 @@ export default class FilmList {
 
   _getTopRatedFilms(films) {
     return [...films]
-      .sort(({rating: a}, {rating: b}) => {
-        return b - a;
-      })
+      .sort(sortFilmByRating)
       .slice(0, MAX_EXTRA_FILMS_COUNT);
   }
 
   _getMostCommentedFilms(films) {
     return [...films]
-      .sort(({comments: a}, {comments: b}) => {
-        return b.length - a.length;
-      })
+      .sort(sortFilmByComments)
       .slice(0, MAX_EXTRA_FILMS_COUNT);
   }
 
@@ -206,8 +199,6 @@ export default class FilmList {
   }
 
   _clearFilms({resetRenderedFilmsCount = false, resetSortType = false} = {}) {
-    const filmsCount = this._getFilms().length;
-
     this._filmPresentersMap.forEach((presenter) => presenter.destroy());
     this._filmPresentersMap.clear();
 
@@ -220,8 +211,6 @@ export default class FilmList {
 
     if (resetRenderedFilmsCount) {
       this._renderedFilmsCount = MAX_FILMS_PER_LINE;
-    } else {
-      this._renderedFilmsCount = Math.min(filmsCount, this._renderedFilmsCount);
     }
 
     if (resetSortType) {

@@ -10,18 +10,16 @@ export default class Popup {
     this._popupEscKeyDownHandler = this._popupEscKeyDownHandler.bind(this);
     this._handlePopupCommentSubmit = this._handlePopupCommentSubmit.bind(this);
     this._handlePopupCommentDelete = this._handlePopupCommentDelete.bind(this);
-    this._handleAddToWatchListClick = this._handleAddToWatchListClick.bind(this);
-    this._handleMarkAsWatchedClick = this._handleAddToWatchListClick.bind(this);
-    this._handleFavoriteClick = this._handleAddToWatchListClick.bind(this);
+    this._handleDataAfterClick = this._handleDataAfterClick.bind(this);
   }
 
   init(film) {
     this._film = film;
     this._popupComponent.setFilm(this._film);
     this._popupComponent.setCloseButtonClickHandler(this._popupCloseButtonClickHandler);
-    this._popupComponent.setAddToWatchListChangeHandler(this._handleAddToWatchListClick);
-    this._popupComponent.setMarkAsWatchedChangeHandler(this._handleMarkAsWatchedClick);
-    this._popupComponent.setFavoriteChangeHandler(this._handleFavoriteClick);
+    this._popupComponent.setAddToWatchListChangeHandler(this._handleDataAfterClick);
+    this._popupComponent.setMarkAsWatchedChangeHandler(this._handleDataAfterClick);
+    this._popupComponent.setFavoriteChangeHandler(this._handleDataAfterClick);
     this._popupComponent.setCommentSubmitHandler(this._handlePopupCommentSubmit);
     this._popupComponent.setCommentDeleteHandler(this._handlePopupCommentDelete);
 
@@ -30,25 +28,10 @@ export default class Popup {
     document.body.classList.add(`hide-overflow`);
   }
 
-  _handleAddToWatchListClick(film) {
-    const updateType = film.inWatchListCollection ? UpdateType.MINOR : UpdateType.PATCH;
-    this._changeDataAfterClick(updateType, film);
-  }
-
-  _handleMarkAsWatchedClick(film) {
-    const updateType = film.inWatchedCollection ? UpdateType.MINOR : UpdateType.PATCH;
-    this._changeDataAfterClick(updateType, film);
-  }
-
-  _handleFavoriteClick(film) {
-    const updateType = film.inFavoriteCollection ? UpdateType.MINOR : UpdateType.PATCH;
-    this._changeDataAfterClick(updateType, film);
-  }
-
-  _changeDataAfterClick(updateType, film) {
+  _handleDataAfterClick(film) {
     this._changeData(
         UserAction.UPDATE_FILM,
-        updateType,
+        UpdateType.MINOR,
         Object.assign({}, film)
     );
   }
