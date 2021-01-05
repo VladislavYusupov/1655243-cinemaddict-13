@@ -119,9 +119,9 @@ export default class Popup extends SmartView {
     this._addToWatchListChangeHandler = this._addToWatchListChangeHandler.bind(this);
     this._markAsWatchedChangeHandler = this._markAsWatchedChangeHandler.bind(this);
     this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
-    this._changeEmojiHandler = this._changeEmojiHandler.bind(this);
-    this._inputNewCommentHandler = this._inputNewCommentHandler.bind(this);
-    this._submitCommentHandler = this._submitCommentHandler.bind(this);
+    this._emojiChangeHandler = this._emojiChangeHandler.bind(this);
+    this._newCommentInputHandler = this._newCommentInputHandler.bind(this);
+    this._commentSubmitHandler = this._commentSubmitHandler.bind(this);
     this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
@@ -167,7 +167,7 @@ export default class Popup extends SmartView {
 
   setCommentSubmitHandler(callback) {
     this._callback.submitComment = callback;
-    document.addEventListener(`keydown`, this._submitCommentHandler);
+    document.addEventListener(`keydown`, this._commentSubmitHandler);
   }
 
   setCommentDeleteHandler(callback) {
@@ -190,7 +190,7 @@ export default class Popup extends SmartView {
     }
   }
 
-  _submitCommentHandler(evt) {
+  _commentSubmitHandler(evt) {
     if (evt.ctrlKey && evt.key === `Enter`) {
       evt.preventDefault();
       const message = this._data.newComment;
@@ -280,7 +280,7 @@ export default class Popup extends SmartView {
     this._resetNewComment();
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
-    document.removeEventListener(`keydown`, this._submitCommentHandler);
+    document.removeEventListener(`keydown`, this._commentSubmitHandler);
 
     this._callback.popupClose();
   }
@@ -288,14 +288,14 @@ export default class Popup extends SmartView {
   _setInnerHandlers() {
     this.getElement()
       .querySelector(`.film-details__emoji-list`)
-      .addEventListener(`change`, this._changeEmojiHandler);
+      .addEventListener(`change`, this._emojiChangeHandler);
 
     this.getElement()
       .querySelector(`.film-details__comment-input`)
-      .addEventListener(`input`, this._inputNewCommentHandler);
+      .addEventListener(`input`, this._newCommentInputHandler);
   }
 
-  _inputNewCommentHandler(evt) {
+  _newCommentInputHandler(evt) {
     evt.preventDefault();
     this.updateData(
         {
@@ -305,7 +305,7 @@ export default class Popup extends SmartView {
     );
   }
 
-  _changeEmojiHandler(evt) {
+  _emojiChangeHandler(evt) {
     evt.preventDefault();
     const emojiSelectedProperty = `emojiSelected`;
     const emojiSelectedValue = evt.target.value;
