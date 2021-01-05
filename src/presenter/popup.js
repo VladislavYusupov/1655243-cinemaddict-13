@@ -10,11 +10,10 @@ export default class Popup {
 
     this._commentsModel = null;
 
-    this._popupCloseButtonClickHandler = this._popupCloseButtonClickHandler.bind(this);
-    this._popupEscKeyDownHandler = this._popupEscKeyDownHandler.bind(this);
     this._handlePopupCommentSubmit = this._handlePopupCommentSubmit.bind(this);
     this._handlePopupCommentDelete = this._handlePopupCommentDelete.bind(this);
     this._handleDataAfterClick = this._handleDataAfterClick.bind(this);
+    this._handlePopupClose = this._handlePopupClose.bind(this);
   }
 
   init(film) {
@@ -25,15 +24,14 @@ export default class Popup {
     this._commentsModel.setComments(this._film.comments);
     this._film.comments = this._commentsModel.getComments();
 
-    this._popupComponent.setData(this._film);
-    this._popupComponent.setCloseButtonClickHandler(this._popupCloseButtonClickHandler);
+    this._popupComponent.setFilm(this._film);
+    this._popupComponent.setPopupCloseHandler(this._handlePopupClose);
     this._popupComponent.setAddToWatchListChangeHandler(this._handleDataAfterClick);
     this._popupComponent.setMarkAsWatchedChangeHandler(this._handleDataAfterClick);
     this._popupComponent.setFavoriteChangeHandler(this._handleDataAfterClick);
     this._popupComponent.setCommentSubmitHandler(this._handlePopupCommentSubmit);
     this._popupComponent.setCommentDeleteHandler(this._handlePopupCommentDelete);
 
-    document.addEventListener(`keydown`, this._popupEscKeyDownHandler);
     document.body.appendChild(this._popupComponent.getElement());
     document.body.classList.add(`hide-overflow`);
   }
@@ -59,7 +57,7 @@ export default class Popup {
   _updateFilm(film) {
     this._changeFilmData(
         UpdateType.MINOR,
-        Object.assign({}, film)
+        film
     );
   }
 
@@ -75,17 +73,9 @@ export default class Popup {
     this._popupComponent.updateDataWithSavingScrollPosition(film);
   }
 
-  _popupCloseButtonClickHandler() {
-    document.removeEventListener(`keydown`, this._popupEscKeyDownHandler);
+  _handlePopupClose() {
     document.body.classList.remove(`hide-overflow`);
     remove(this._popupComponent);
     this._commentsModel.clearComments();
-  }
-
-  _popupEscKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      this._popupCloseButtonClickHandler();
-    }
   }
 }

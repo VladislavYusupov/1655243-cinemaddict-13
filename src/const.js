@@ -15,7 +15,6 @@ export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
-  INIT: `INIT`
 };
 
 export const FILM_RELEASE_DATE_FORMAT = `D MMMM YYYY`;

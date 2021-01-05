@@ -115,7 +115,7 @@ export default class Popup extends SmartView {
   constructor() {
     super();
 
-    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
+    this._popupCloseHandler = this._popupCloseHandler.bind(this);
     this._addToWatchListChangeHandler = this._addToWatchListChangeHandler.bind(this);
     this._markAsWatchedChangeHandler = this._markAsWatchedChangeHandler.bind(this);
     this._favoriteChangeHandler = this._favoriteChangeHandler.bind(this);
@@ -123,9 +123,10 @@ export default class Popup extends SmartView {
     this._inputNewCommentHandler = this._inputNewCommentHandler.bind(this);
     this._submitCommentHandler = this._submitCommentHandler.bind(this);
     this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
+    this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
-  setData(film) {
+  setFilm(film) {
     this._data = film;
     this._setInnerHandlers();
   }
@@ -134,24 +135,34 @@ export default class Popup extends SmartView {
     return createPopupTemplate(this._data);
   }
 
-  setCloseButtonClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
+  setPopupCloseHandler(callback) {
+    this._callback.popupClose = callback;
+    this.getElement()
+      .querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, this._popupCloseHandler);
+
+    document.addEventListener(`keydown`, this._escKeyDownHandler);
   }
 
   setAddToWatchListChangeHandler(callback) {
     this._callback.addToWatchListClick = callback;
-    this.getElement().querySelector(`#watchlist`).addEventListener(`change`, this._addToWatchListChangeHandler);
+    this.getElement()
+      .querySelector(`#watchlist`)
+      .addEventListener(`change`, this._addToWatchListChangeHandler);
   }
 
   setMarkAsWatchedChangeHandler(callback) {
     this._callback.markAsWatchedClick = callback;
-    this.getElement().querySelector(`#watched`).addEventListener(`change`, this._markAsWatchedChangeHandler);
+    this.getElement()
+      .querySelector(`#watched`)
+      .addEventListener(`change`, this._markAsWatchedChangeHandler);
   }
 
   setFavoriteChangeHandler(callback) {
     this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`#favorite`).addEventListener(`change`, this._favoriteChangeHandler);
+    this.getElement()
+      .querySelector(`#favorite`)
+      .addEventListener(`change`, this._favoriteChangeHandler);
   }
 
   setCommentSubmitHandler(callback) {
@@ -161,26 +172,38 @@ export default class Popup extends SmartView {
 
   setCommentDeleteHandler(callback) {
     this._callback.deleteComment = callback;
-    this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._commentDeleteHandler);
+    this.getElement()
+      .querySelector(`.film-details__comments-list`)
+      .addEventListener(`click`, this._commentDeleteHandler);
   }
 
-  updateDataWithSavingScrollPosition(update, justDataUpdating) {
+  updateDataWithSavingScrollPosition(update) {
     this._setScrollTop();
-    this.updateData(update, justDataUpdating);
+    this.updateData(update);
     this._updateScrollTop();
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      this._popupCloseHandler(evt);
+    }
   }
 
   _submitCommentHandler(evt) {
     if (evt.ctrlKey && evt.key === `Enter`) {
       evt.preventDefault();
-      const message = he.encode(this._data.newComment);
+      const message = this._data.newComment;
       const emoji = this._data.emojiSelected;
 
       if (message && emoji) {
-        const localComment = {message, emoji, date: dayjs()};
+        const localComment = {
+          message: he.encode(message),
+          emoji,
+          date: dayjs()
+        };
 
-        this._data.emojiSelected = null;
-        this._data.newComment = null;
+        this._resetNewComment();
 
         this._callback.submitComment(localComment, Popup.parseDataToFilm(this._data));
       }
@@ -203,32 +226,63 @@ export default class Popup extends SmartView {
     this._scrollTop = this.getElement().scrollTop;
   }
 
+  _resetNewComment(justDataUpdating = true) {
+    this.updateData(
+        {
+          emojiSelected: null,
+          newComment: null
+        },
+        justDataUpdating
+    );
+  }
+
   _addToWatchListChangeHandler(evt) {
     evt.preventDefault();
-    this._data.inWatchListCollection = !this._data.inWatchListCollection;
+
+    this.updateData(
+        {
+          inWatchListCollection: !this._data.inWatchListCollection
+        },
+        true
+    );
+
     this._callback.addToWatchListClick(Popup.parseDataToFilm(this._data));
   }
 
   _markAsWatchedChangeHandler(evt) {
     evt.preventDefault();
-    this._data.inWatchedCollection = !this._data.inWatchedCollection;
+
+    this.updateData(
+        {
+          inWatchedCollection: !this._data.inWatchedCollection
+        },
+        true
+    );
+
     this._callback.markAsWatchedClick(Popup.parseDataToFilm(this._data));
   }
 
   _favoriteChangeHandler(evt) {
     evt.preventDefault();
-    this._data.inFavoriteCollection = !this._data.inFavoriteCollection;
+
+    this.updateData(
+        {
+          inFavoriteCollection: !this._data.inFavoriteCollection
+        },
+        true
+    );
+
     this._callback.favoriteClick(Popup.parseDataToFilm(this._data));
   }
 
-  _closeButtonClickHandler(evt) {
+  _popupCloseHandler(evt) {
     evt.preventDefault();
+    this._resetNewComment();
 
-    this._data.emojiSelected = null;
-    this._data.newComment = null;
-    this.updateData(this._data, true);
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    document.removeEventListener(`keydown`, this._submitCommentHandler);
 
-    this._callback.click();
+    this._callback.popupClose();
   }
 
   _setInnerHandlers() {
@@ -243,9 +297,12 @@ export default class Popup extends SmartView {
 
   _inputNewCommentHandler(evt) {
     evt.preventDefault();
-    this._data.newComment = evt.target.value;
-
-    this.updateData(this._data, true);
+    this.updateData(
+        {
+          newComment: evt.target.value
+        },
+        true
+    );
   }
 
   _changeEmojiHandler(evt) {
@@ -258,14 +315,15 @@ export default class Popup extends SmartView {
         return;
       }
 
-      this._data.emojiSelected = emojiSelectedValue;
-      this.updateDataWithSavingScrollPosition(this._data);
+      this.updateDataWithSavingScrollPosition({
+        emojiSelected: emojiSelectedValue
+      });
     }
   }
 
   restoreHandlers() {
     this._setInnerHandlers();
-    this.setCloseButtonClickHandler(this._callback.click);
+    this.setPopupCloseHandler(this._callback.popupClose);
     this.setAddToWatchListChangeHandler(this._callback.addToWatchListClick);
     this.setMarkAsWatchedChangeHandler(this._callback.markAsWatchedClick);
     this.setFavoriteChangeHandler(this._callback.favoriteClick);

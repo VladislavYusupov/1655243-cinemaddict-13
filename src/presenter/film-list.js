@@ -36,7 +36,6 @@ export default class FilmList {
     this._filmListComponent = new FilmListView();
     this._filmListContainerComponent = new FilmListContainerView();
     this._emptyFilmsComponent = new EmptyFilmsView();
-    this._popupComponent = new PopupView();
 
     this._filmPresentersMap = new Map();
     this._topRatedFilmPresentersMap = new Map();
