@@ -7,7 +7,6 @@ import FilmsModel from "./model/films";
 import FilterModel from "./model/filter";
 import FilmListPresenter from "./presenter/film-list";
 import FilterPresenter from "./presenter/filter";
-import {UpdateType} from "./const";
 
 const FILMS_NUMBER = 20;
 
@@ -21,7 +20,7 @@ const footerStatisticsElement = footerElement.querySelector(`.footer__statistics
 
 const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
-filmsModel.setFilms(UpdateType.INIT, films);
+filmsModel.setFilms(films);
 
 const filmListPresenter = new FilmListPresenter(mainElement, filmsModel, filterModel);
 const filterPresenter = new FilterPresenter(mainElement, filterModel, filmsModel);

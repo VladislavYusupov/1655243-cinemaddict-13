@@ -8,10 +8,9 @@ import EmojiImageView from "./popup-comment-emoji";
 import SmartView from "./smart";
 import dayjs from "dayjs";
 import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
-import {nanoid} from "nanoid";
 import he from "he";
 
-const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, runtime, country, genres, age, poster, description, rating, comments, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
+const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, comments, runtime, country, genres, age, poster, description, rating, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -126,7 +125,7 @@ export default class Popup extends SmartView {
     this._commentDeleteHandler = this._commentDeleteHandler.bind(this);
   }
 
-  setFilm(film) {
+  setData(film) {
     this._data = film;
     this._setInnerHandlers();
   }
@@ -165,6 +164,12 @@ export default class Popup extends SmartView {
     this.getElement().querySelector(`.film-details__comments-list`).addEventListener(`click`, this._commentDeleteHandler);
   }
 
+  updateDataWithSavingScrollPosition(update, justDataUpdating) {
+    this._setScrollTop();
+    this.updateData(update, justDataUpdating);
+    this._updateScrollTop();
+  }
+
   _submitCommentHandler(evt) {
     if (evt.ctrlKey && evt.key === `Enter`) {
       evt.preventDefault();
@@ -172,22 +177,12 @@ export default class Popup extends SmartView {
       const emoji = this._data.emojiSelected;
 
       if (message && emoji) {
-        this._data.comments.push({
-          id: nanoid(),
-          message,
-          emoji,
-          author: `author`,
-          date: dayjs()
-        });
+        const localComment = {message, emoji, date: dayjs()};
 
         this._data.emojiSelected = null;
         this._data.newComment = null;
 
-        this._setScrollTop();
-        this.updateData(this._data);
-        this._updateScrollTop();
-
-        this._callback.submitComment();
+        this._callback.submitComment(localComment, Popup.parseDataToFilm(this._data));
       }
     }
   }
@@ -195,17 +190,8 @@ export default class Popup extends SmartView {
   _commentDeleteHandler(evt) {
     evt.preventDefault();
     if (evt.target.classList.contains(`film-details__comment-delete`)) {
-      const commentIndex = this._data.comments.findIndex((comment) => {
-        return comment.id === evt.target.dataset.id;
-      });
-
-      this._data.comments.splice(commentIndex, 1);
-
-      this._setScrollTop();
-      this.updateData(this._data);
-      this._updateScrollTop();
-
-      this._callback.deleteComment();
+      const commentId = evt.target.dataset.id;
+      this._callback.deleteComment(commentId, Popup.parseDataToFilm(this._data));
     }
   }
 
@@ -219,33 +205,29 @@ export default class Popup extends SmartView {
 
   _addToWatchListChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData({
-      inWatchListCollection: !this._data.inWatchListCollection
-    }, true);
-
+    this._data.inWatchListCollection = !this._data.inWatchListCollection;
     this._callback.addToWatchListClick(Popup.parseDataToFilm(this._data));
   }
 
   _markAsWatchedChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData({
-      inWatchedCollection: !this._data.inWatchedCollection
-    }, true);
-
+    this._data.inWatchedCollection = !this._data.inWatchedCollection;
     this._callback.markAsWatchedClick(Popup.parseDataToFilm(this._data));
   }
 
   _favoriteChangeHandler(evt) {
     evt.preventDefault();
-    this.updateData({
-      inFavoriteCollection: !this._data.inFavoriteCollection
-    }, true);
-
+    this._data.inFavoriteCollection = !this._data.inFavoriteCollection;
     this._callback.favoriteClick(Popup.parseDataToFilm(this._data));
   }
 
   _closeButtonClickHandler(evt) {
     evt.preventDefault();
+
+    this._data.emojiSelected = null;
+    this._data.newComment = null;
+    this.updateData(this._data, true);
+
     this._callback.click();
   }
 
@@ -261,10 +243,9 @@ export default class Popup extends SmartView {
 
   _inputNewCommentHandler(evt) {
     evt.preventDefault();
+    this._data.newComment = evt.target.value;
 
-    this.updateData({
-      newComment: evt.target.value
-    }, true);
+    this.updateData(this._data, true);
   }
 
   _changeEmojiHandler(evt) {
@@ -277,12 +258,8 @@ export default class Popup extends SmartView {
         return;
       }
 
-      this._setScrollTop();
-
-      this.updateData({
-        emojiSelected: emojiSelectedValue
-      });
-      this._updateScrollTop();
+      this._data.emojiSelected = emojiSelectedValue;
+      this.updateDataWithSavingScrollPosition(this._data);
     }
   }
 

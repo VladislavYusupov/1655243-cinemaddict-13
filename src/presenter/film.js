@@ -1,13 +1,14 @@
 import {remove, replace, render} from "../utils/render";
-import {UserAction, UpdateType} from "../const.js";
+import {UpdateType} from "../const.js";
 import CardView from "../view/film-card";
 
 export default class Film {
-  constructor(filmContainer, popupPresenter, changeData) {
+  constructor(filmContainer, popupPresenter, changeFilmData) {
     this._filmContainer = filmContainer;
     this._popupPresenter = popupPresenter;
+    this._changeFilmData = changeFilmData;
+
     this._filmCardComponent = null;
-    this._changeData = changeData;
 
     this._filmCardInfoClickHandler = this._filmCardInfoClickHandler.bind(this);
     this._handleAddToWatchListClick = this._handleAddToWatchListClick.bind(this);
@@ -41,18 +42,6 @@ export default class Film {
     remove(this._filmCardComponent);
   }
 
-  // здесь планировал обрабатывать действия для комментариев, только пока не понял как работать с моделью и стоит ли создавать метод в этом месте
-  // _handleViewAction(actionType, updateType, update) {
-  //   switch (actionType) {
-  //     case UserAction.ADD_COMMENT:
-  //       // this._filmsModel.updateFilm(updateType, update);
-  //       break;
-  //     case UserAction.DELETE_COMMENT:
-  //       // this._filmsModel.updateFilm(updateType, update);
-  //       break;
-  //   }
-  // }
-
   _filmCardInfoClickHandler() {
     this._popupPresenter.init(this._film);
   }
@@ -60,8 +49,7 @@ export default class Film {
   _handleAddToWatchListClick() {
     const updateType = this._film.inWatchListCollection ? UpdateType.MINOR : UpdateType.PATCH;
 
-    this._changeData(
-        UserAction.UPDATE_FILM,
+    this._changeFilmData(
         updateType,
         Object.assign(
             {},
@@ -76,8 +64,7 @@ export default class Film {
   _handleMarkAsWatchedClick() {
     const updateType = this._film.inWatchedCollection ? UpdateType.MINOR : UpdateType.PATCH;
 
-    this._changeData(
-        UserAction.UPDATE_FILM,
+    this._changeFilmData(
         updateType,
         Object.assign(
             {},
@@ -92,8 +79,7 @@ export default class Film {
   _handleFavoriteClick() {
     const updateType = this._film.inFavoriteCollection ? UpdateType.MINOR : UpdateType.PATCH;
 
-    this._changeData(
-        UserAction.UPDATE_FILM,
+    this._changeFilmData(
         updateType,
         Object.assign(
             {},

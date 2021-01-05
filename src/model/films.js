@@ -1,6 +1,6 @@
 import Observer from "../utils/observer";
 
-export default class FilmList extends Observer {
+export default class Films extends Observer {
   constructor() {
     super();
     this._films = [];
@@ -10,10 +10,8 @@ export default class FilmList extends Observer {
     return this._films;
   }
 
-  setFilms(updateType, films) {
+  setFilms(films) {
     this._films = [...films];
-
-    this._notify(updateType);
   }
 
   updateFilm(updateType, update) {

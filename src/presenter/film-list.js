@@ -8,7 +8,7 @@ import EmptyFilmsView from "../view/empty-films";
 import ExtraFilmsListView from "../view/extra-films-list";
 import ShowMoreButtonView from "../view/show-more-button";
 import FilmPresenter from "./film";
-import {SortType, UserAction, UpdateType} from "../const";
+import {SortType, UpdateType} from "../const";
 import {filter} from "../utils/filter";
 import PopupPresenter from "./popup";
 import {sortFilmByRating, sortFilmByComments, sortFilmByReleaseDate} from "../utils/film";
@@ -75,12 +75,8 @@ export default class FilmList {
     return filteredFilms;
   }
 
-  _handleViewAction(actionType, updateType, update) {
-    switch (actionType) {
-      case UserAction.UPDATE_FILM:
-        this._filmsModel.updateFilm(updateType, update);
-        break;
-    }
+  _handleViewAction(updateType, update) {
+    this._filmsModel.updateFilm(updateType, update);
   }
 
   _handleModelEvent(updateType, data) {
