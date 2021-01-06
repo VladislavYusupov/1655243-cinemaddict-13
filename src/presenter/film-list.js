@@ -240,4 +240,12 @@ export default class FilmList {
     this._renderExtraFilms(ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
     this._renderExtraFilms(ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
   }
+
+  show() {
+    this._filmsComponent.show();
+  }
+
+  hide() {
+    this._filmsComponent.hide();
+  }
 }

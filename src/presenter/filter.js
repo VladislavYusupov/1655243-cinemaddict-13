@@ -1,4 +1,4 @@
-import FilterView from "../view/menu-navigation.js";
+import FilterView from "../view/menu-navigation-filters.js";
 import {render, replace, remove} from "../utils/render.js";
 import {FilterType, UpdateType} from "../const.js";
 import {filter} from "../utils/filter.js";
