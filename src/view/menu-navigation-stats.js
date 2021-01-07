@@ -1,18 +1,18 @@
 import AbstractView from "./abstract.js";
 
-const createMenuNavigationStatsTemplate = (isActiveStats) => {
-  return `<a href="#stats" class="main-navigation__additional ${isActiveStats ? `main-navigation__item--active` : ``}">Stats</a>`;
+const createMenuNavigationStatsTemplate = (statsState) => {
+  return `<a href="#stats" class="main-navigation__additional ${statsState ? `main-navigation__item--active` : ``}">Stats</a>`;
 };
 
 export default class MenuNavigationStats extends AbstractView {
-  constructor() {
+  constructor(statsState) {
     super();
-    this._isActiveStats = false;
+    this._statsState = statsState;
     this._clickHandler = this._clickHandler.bind(this);
   }
 
   getTemplate() {
-    return createMenuNavigationStatsTemplate(this._isActiveStats);
+    return createMenuNavigationStatsTemplate(this._statsState);
   }
 
   setClickHandler(callback) {
@@ -22,7 +22,6 @@ export default class MenuNavigationStats extends AbstractView {
 
   _clickHandler(evt) {
     evt.preventDefault();
-    this._isActiveStats = !this._isActiveStats;
-    this._callback.click(this._isActiveStats);
+    this._callback.click();
   }
 }

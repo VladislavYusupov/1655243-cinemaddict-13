@@ -5,11 +5,11 @@ import {generateUser} from "./mock/user";
 import {render} from "./utils/render";
 import FilmsModel from "./model/films";
 import FilterModel from "./model/filter";
+import StatsModel from "./model/stats";
 import FilmListPresenter from "./presenter/film-list";
 import FilterPresenter from "./presenter/filter";
-import MenuNavigationStatsView from "./view/menu-navigation-stats";
+import StatsPresenter from "./presenter/stats";
 import MenuNavigationView from "./view/menu-navigation";
-import StatisticsView from "./view/statistics";
 
 const FILMS_NUMBER = 20;
 
@@ -22,38 +22,21 @@ const footerElement = document.querySelector(`footer`);
 const footerStatisticsElement = footerElement.querySelector(`.footer__statistics`);
 
 const menuNavigationComponent = new MenuNavigationView();
-const menuNavigationStatsComponent = new MenuNavigationStatsView();
-let statsComponent = null;
+
 
 const filterModel = new FilterModel();
+const statsModel = new StatsModel();
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
-const filmListPresenter = new FilmListPresenter(mainElement, filmsModel, filterModel);
-const filterPresenter = new FilterPresenter(menuNavigationComponent, filterModel, filmsModel);
+const filmListPresenter = new FilmListPresenter(mainElement, filmsModel, filterModel, statsModel);
+const filterPresenter = new FilterPresenter(menuNavigationComponent, filterModel, filmsModel, statsModel);
+const statsPresenter = new StatsPresenter(menuNavigationComponent, filterModel, statsModel, filmsModel);
 
 render(headerElement, new ProfileView(user));
 render(mainElement, menuNavigationComponent);
 render(footerStatisticsElement, new FooterStatisticView(films));
 
-const handleStatsClick = (isActive) => {
-  if (isActive) {
-    filmListPresenter.hide();
-
-    if (statsComponent === null) {
-      statsComponent = new StatisticsView();
-      render(mainElement, statsComponent);
-      return;
-    }
-    statsComponent.show();
-  } else {
-    filmListPresenter.show();
-    statsComponent.hide();
-  }
-};
-
 filterPresenter.init();
+statsPresenter.init();
 filmListPresenter.init();
-menuNavigationStatsComponent.setClickHandler(handleStatsClick);
-
-render(menuNavigationComponent, menuNavigationStatsComponent);

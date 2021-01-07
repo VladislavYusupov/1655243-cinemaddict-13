@@ -5,6 +5,7 @@ export const SortType = {
 };
 
 export const FilterType = {
+  NONE: ``,
   ALL: `all`,
   WATCHLIST: `watchlist`,
   HISTORY: `history`,
@@ -15,6 +16,7 @@ export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
   MAJOR: `MAJOR`,
+  SWITCH_SCREEN: `SWITCH_SCREEN`,
 };
 
 export const FILM_RELEASE_DATE_FORMAT = `D MMMM YYYY`;

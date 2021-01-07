@@ -22,10 +22,11 @@ const ExtraFilmName = {
 };
 
 export default class FilmList {
-  constructor(filmsContainer, filmsModel, filterModel) {
+  constructor(filmsContainer, filmsModel, filterModel, statsModel) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
+    this._statsModel = statsModel;
     this._renderedFilmsCount = MAX_FILMS_PER_LINE;
     this._currentSortType = SortType.DEFAULT;
 
@@ -53,6 +54,9 @@ export default class FilmList {
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+    this._statsModel.addObserver(this._handleModelEvent);
+
+    this._visible = true;
 
     this._renderSortAndFilms();
   }
@@ -90,8 +94,17 @@ export default class FilmList {
         this._renderSortAndFilms();
         break;
       case UpdateType.MAJOR:
+        this._visible = true;
         this._clearFilms({resetRenderedFilmsCount: true, resetSortType: true});
         this._renderSortAndFilms();
+        break;
+      case UpdateType.SWITCH_SCREEN:
+        if (this._visible) {
+          this.hide();
+        } else {
+          this.show();
+        }
+
         break;
     }
   }
@@ -243,9 +256,11 @@ export default class FilmList {
 
   show() {
     this._filmsComponent.show();
+    this._visible = true;
   }
 
   hide() {
     this._filmsComponent.hide();
+    this._visible = false;
   }
 }
