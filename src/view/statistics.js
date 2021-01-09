@@ -1,6 +1,67 @@
 import AbstractView from "./abstract.js";
 import {StatisticsType} from "../const";
 import getFormattedTotalDuration from "../getFormattedTotalDuration";
+import Chart from "chart.js";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+const renderStatisticsChart = (statisticsCtx, labels, datasets) => {
+  return new Chart(statisticsCtx, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels,
+      datasets: [{
+        data: datasets,
+        backgroundColor: `#ffe800`,
+        hoverBackgroundColor: `#ffe800`,
+        anchor: `start`,
+        barThickness: `flex`,
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 18
+          },
+          color: `#ffffff`,
+          anchor: `start`,
+          align: `start`,
+          offset: 40,
+        }
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#ffffff`,
+            padding: 100,
+            fontSize: 18
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          }
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false
+      }
+    }
+  });
+};
 
 const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStatisticsType, userRank) => {
   return `
@@ -44,12 +105,17 @@ const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStat
 };
 
 export default class Statistic extends AbstractView {
-  constructor(statistics, currentStatisticsType, userRank) {
+  constructor(statistics, currentStatisticsType, userRank, sortedFilmsByGenres) {
     super();
     this._statistics = statistics;
     this._currentStatisticsType = currentStatisticsType;
     this._userRank = userRank;
+    this._sortedFilmsByGenres = sortedFilmsByGenres;
     this._statisticsTypeClickHandler = this._statisticsTypeClickHandler.bind(this);
+
+    this._statisticsChart = null;
+
+    this._setChart();
   }
 
   getTemplate() {
@@ -67,5 +133,17 @@ export default class Statistic extends AbstractView {
     if (evt.target.classList.contains(`statistic__filters-label`)) {
       this._callback.statisticsTypeClick(evt.target.dataset.statisticsType);
     }
+  }
+
+  _setChart() {
+    if (this._statisticsChart !== null) {
+      this._statisticsChart = null;
+    }
+
+    const labels = Object.keys(this._sortedFilmsByGenres);
+    const datasets = Object.values(this._sortedFilmsByGenres);
+    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+
+    this._statisticsChart = renderStatisticsChart(statisticCtx, labels, datasets);
   }
 }

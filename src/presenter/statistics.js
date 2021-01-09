@@ -1,7 +1,7 @@
 import {render, replace, remove} from "../utils/render.js";
 import StatisticsView from "../view/statistics";
 import {StatisticsType} from "../const";
-import {statistics} from "../utils/statistics";
+import {getSortedFilmsByGenres, statistics} from "../utils/statistics";
 import getUserRank from "../getUserRank.js";
 
 export default class Statistics {
@@ -25,10 +25,11 @@ export default class Statistics {
     this._films = this._filmsModel.getFilms();
     this._currentStatistics = this._getStatistics(this._films);
     this._userRank = getUserRank(this._films);
+    this._sortedFilmsByGenres = getSortedFilmsByGenres(this._films);
 
     const prevStatisticsComponent = this._statisticsComponent;
 
-    this._statisticsComponent = new StatisticsView(this._currentStatistics, this._currentStatisticsType, this._userRank);
+    this._statisticsComponent = new StatisticsView(this._currentStatistics, this._currentStatisticsType, this._userRank, this._sortedFilmsByGenres);
     this._statisticsComponent.setStatisticsTypeClickHandler(this._handleStatisticsTypeClick);
 
     if (prevStatisticsComponent === null) {
