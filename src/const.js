@@ -12,7 +12,7 @@ export const FilterType = {
 };
 
 export const UpdateType = {
-  SINGLE_LIST_ITEM: `singleListItem`,
+  RERENDER_SINGLE_LIST_ITEM: `rerenderSingleListItem`,
   RERENDER_WITH_CURRENT_PRESENTER_SETTINGS: `rerenderWithCurrentPresenterSettings`,
   RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS: `rerenderWithDefaultPresenterSettings`,
 };

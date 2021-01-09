@@ -80,7 +80,7 @@ export default class Films {
 
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.SINGLE_LIST_ITEM:
+      case UpdateType.RERENDER_SINGLE_LIST_ITEM:
         this._updateFilmComponentIfMapHaveIt(this._filmPresentersMap, data);
         this._updateFilmComponentIfMapHaveIt(this._topRatedFilmPresentersMap, data);
         this._updateFilmComponentIfMapHaveIt(this._mostCommentedFilmPresentersMap, data);
