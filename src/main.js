@@ -32,7 +32,7 @@ filmsModel.setFilms(films);
 const filmListPresenter = new FilmListPresenter(mainElement, filmsModel, filterModel, statsModel);
 const filterPresenter = new FilterPresenter(menuNavigationComponent, filterModel, filmsModel, statsModel);
 const statsPresenter = new StatsPresenter(menuNavigationComponent, filterModel, statsModel, filmsModel);
-const statisticsPresenter = new StatisticsPresenter(mainElement, null, statsModel);
+const statisticsPresenter = new StatisticsPresenter(mainElement, null, statsModel, filmsModel);
 
 render(headerElement, new ProfileView(user));
 render(mainElement, menuNavigationComponent);

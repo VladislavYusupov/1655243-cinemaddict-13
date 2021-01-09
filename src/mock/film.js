@@ -149,5 +149,6 @@ export const generateFilm = () => {
     inWatchListCollection: getRandomBoolean(),
     inWatchedCollection: getRandomBoolean(),
     inFavoriteCollection: getRandomBoolean(),
+    watchingDate: getRandomDate(MIN_RELEASE_YEAR),
   };
 };
