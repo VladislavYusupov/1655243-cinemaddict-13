@@ -21,7 +21,7 @@ const ExtraFilmName = {
   MOST_COMMENTED: `Most commented`,
 };
 
-export default class FilmList {
+export default class Films {
   constructor(filmsContainer, filmsModel, filterModel) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
@@ -80,16 +80,16 @@ export default class FilmList {
 
   _handleModelEvent(updateType, data) {
     switch (updateType) {
-      case UpdateType.PATCH:
+      case UpdateType.SINGLE_LIST_ITEM:
         this._updateFilmComponentIfMapHaveIt(this._filmPresentersMap, data);
         this._updateFilmComponentIfMapHaveIt(this._topRatedFilmPresentersMap, data);
         this._updateFilmComponentIfMapHaveIt(this._mostCommentedFilmPresentersMap, data);
         break;
-      case UpdateType.MINOR:
+      case UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS:
         this._clearFilms();
         this._renderSortAndFilms();
         break;
-      case UpdateType.MAJOR:
+      case UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS:
         this._clearFilms({resetRenderedFilmsCount: true, resetSortType: true});
         this._renderSortAndFilms();
         break;

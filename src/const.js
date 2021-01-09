@@ -12,9 +12,9 @@ export const FilterType = {
 };
 
 export const UpdateType = {
-  PATCH: `PATCH`,
-  MINOR: `MINOR`,
-  MAJOR: `MAJOR`,
+  SINGLE_LIST_ITEM: `singleListItem`,
+  RERENDER_WITH_CURRENT_PRESENTER_SETTINGS: `rerenderWithCurrentPresenterSettings`,
+  RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS: `rerenderWithDefaultPresenterSettings`,
 };
 
 export const FILM_RELEASE_DATE_FORMAT = `D MMMM YYYY`;

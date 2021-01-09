@@ -23,7 +23,7 @@ const createCardTemplate = ({title, poster, shortDescription, rating, releaseDat
     </article>`;
 };
 
-export default class Card extends AbstractView {
+export default class FilmCard extends AbstractView {
   constructor(film) {
     super();
     this._film = film;

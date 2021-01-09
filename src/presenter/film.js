@@ -47,7 +47,7 @@ export default class Film {
   }
 
   _handleAddToWatchListClick() {
-    const updateType = this._film.inWatchListCollection ? UpdateType.MINOR : UpdateType.PATCH;
+    const updateType = this._film.inWatchListCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.SINGLE_LIST_ITEM;
 
     this._changeFilmData(
         updateType,
@@ -62,7 +62,7 @@ export default class Film {
   }
 
   _handleMarkAsWatchedClick() {
-    const updateType = this._film.inWatchedCollection ? UpdateType.MINOR : UpdateType.PATCH;
+    const updateType = this._film.inWatchedCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.SINGLE_LIST_ITEM;
 
     this._changeFilmData(
         updateType,
@@ -77,7 +77,7 @@ export default class Film {
   }
 
   _handleFavoriteClick() {
-    const updateType = this._film.inFavoriteCollection ? UpdateType.MINOR : UpdateType.PATCH;
+    const updateType = this._film.inFavoriteCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.SINGLE_LIST_ITEM;
 
     this._changeFilmData(
         updateType,

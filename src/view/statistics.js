@@ -1,6 +1,6 @@
 import AbstractView from "./abstract.js";
 
-const createStatisticTemplate = () => {
+const createStatisticsTemplate = () => {
   return `
     <section class="statistic">
       <p class="statistic__rank">
@@ -41,8 +41,8 @@ const createStatisticTemplate = () => {
     </section>`;
 };
 
-export default class Statistic extends AbstractView {
+export default class Statistics extends AbstractView {
   getTemplate() {
-    return createStatisticTemplate();
+    return createStatisticsTemplate();
   }
 }

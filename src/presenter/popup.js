@@ -56,7 +56,7 @@ export default class Popup {
 
   _updateFilm(film) {
     this._changeFilmData(
-        UpdateType.MINOR,
+        UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS,
         film
     );
   }
