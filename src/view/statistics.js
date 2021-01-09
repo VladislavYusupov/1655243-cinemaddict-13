@@ -2,13 +2,13 @@ import AbstractView from "./abstract.js";
 import {StatisticsType} from "../const";
 import getFormattedTotalDuration from "../getFormattedTotalDuration";
 
-const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStatisticsType) => {
+const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStatisticsType, userRank) => {
   return `
     <section class="statistic">
       <p class="statistic__rank">
         Your rank
         <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-        <span class="statistic__rank-label">Sci-Fighter</span>
+        <span class="statistic__rank-label">${userRank ? userRank : ``}</span>
       </p>
       <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
         <p class="statistic__filters-description">Show stats:</p>
@@ -44,15 +44,16 @@ const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStat
 };
 
 export default class Statistic extends AbstractView {
-  constructor(statistics, currentStatisticsType) {
+  constructor(statistics, currentStatisticsType, userRank) {
     super();
     this._statistics = statistics;
     this._currentStatisticsType = currentStatisticsType;
+    this._userRank = userRank;
     this._statisticsTypeClickHandler = this._statisticsTypeClickHandler.bind(this);
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._statistics[this._currentStatisticsType], this._currentStatisticsType);
+    return createStatisticTemplate(this._statistics[this._currentStatisticsType], this._currentStatisticsType, this._userRank);
   }
 
   setStatisticsTypeClickHandler(callback) {

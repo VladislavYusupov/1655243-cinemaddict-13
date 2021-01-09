@@ -1,7 +1,5 @@
-import ProfileView from "./view/profile";
 import FooterStatisticView from "./view/footer-statistic";
 import {generateFilm} from "./mock/film";
-import {generateUser} from "./mock/user";
 import {render} from "./utils/render";
 import FilmsModel from "./model/films";
 import FilterModel from "./model/filter";
@@ -10,12 +8,12 @@ import FilmListPresenter from "./presenter/film-list";
 import FilterPresenter from "./presenter/filter";
 import StatsPresenter from "./presenter/stats";
 import StatisticsPresenter from "./presenter/statistics";
+import ProfilePresenter from "./presenter/profile";
 import MenuNavigationView from "./view/menu-navigation";
 
 const FILMS_NUMBER = 20;
 
 const films = new Array(FILMS_NUMBER).fill({}).map(generateFilm);
-const user = generateUser();
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -29,15 +27,16 @@ const statsModel = new StatsModel();
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
+const profilePresenter = new ProfilePresenter(headerElement, filmsModel);
 const filmListPresenter = new FilmListPresenter(mainElement, filmsModel, filterModel, statsModel);
 const filterPresenter = new FilterPresenter(menuNavigationComponent, filterModel, filmsModel, statsModel);
 const statsPresenter = new StatsPresenter(menuNavigationComponent, filterModel, statsModel, filmsModel);
 const statisticsPresenter = new StatisticsPresenter(mainElement, null, statsModel, filmsModel);
 
-render(headerElement, new ProfileView(user));
 render(mainElement, menuNavigationComponent);
 render(footerStatisticsElement, new FooterStatisticView(films));
 
+profilePresenter.init();
 filterPresenter.init();
 statsPresenter.init();
 filmListPresenter.init();

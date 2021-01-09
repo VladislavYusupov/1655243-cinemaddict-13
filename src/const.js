@@ -27,5 +27,12 @@ export const StatisticsType = {
   YEAR: `year`,
 };
 
+export const USER_RANKS = {
+  21: `movie buff`,
+  11: `fan`,
+  1: `novice`,
+  0: false,
+};
+
 export const FILM_RELEASE_DATE_FORMAT = `D MMMM YYYY`;
 export const FILM_RUNTIME_FORMAT = `H[h] m[m]`;

@@ -2,8 +2,9 @@ import {render, replace, remove} from "../utils/render.js";
 import StatisticsView from "../view/statistics";
 import {StatisticsType} from "../const";
 import {statistics} from "../utils/statistics";
+import getUserRank from "../getUserRank.js";
 
-export default class Stats {
+export default class Statistics {
   constructor(statisticsContainer, statisticsModel, statsModel, filmsModel) {
     this._statisticsContainer = statisticsContainer;
     this._statisticsModel = statisticsModel;
@@ -17,14 +18,17 @@ export default class Stats {
     this._handleStatisticsTypeClick = this._handleStatisticsTypeClick.bind(this);
 
     this._statsModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
-    this._currentStatistics = this._getStatistics();
+    this._films = this._filmsModel.getFilms();
+    this._currentStatistics = this._getStatistics(this._films);
+    this._userRank = getUserRank(this._films);
 
     const prevStatisticsComponent = this._statisticsComponent;
 
-    this._statisticsComponent = new StatisticsView(this._currentStatistics, this._currentStatisticsType);
+    this._statisticsComponent = new StatisticsView(this._currentStatistics, this._currentStatisticsType, this._userRank);
     this._statisticsComponent.setStatisticsTypeClickHandler(this._handleStatisticsTypeClick);
 
     if (prevStatisticsComponent === null) {
@@ -38,6 +42,7 @@ export default class Stats {
   }
 
   _handleModelEvent() {
+    this.init();
     return this._statsModel.getStats() ? this.show() : this.hide();
   }
 
@@ -50,9 +55,7 @@ export default class Stats {
     this.init();
   }
 
-  _getStatistics() {
-    const films = this._filmsModel.getFilms();
-
+  _getStatistics(films) {
     return {
       [StatisticsType.ALL_TIME]: statistics[StatisticsType.ALL_TIME](films),
       [StatisticsType.TODAY]: statistics[StatisticsType.TODAY](films),
