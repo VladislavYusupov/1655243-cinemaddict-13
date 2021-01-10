@@ -1,17 +1,20 @@
-import AbstractView from "./abstract.js";
+import SmartView from "./smart.js";
 import {StatisticsType} from "../const";
 import getFormattedTotalDuration from "../getFormattedTotalDuration";
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-const renderStatisticsChart = (statisticsCtx, labels, datasets) => {
+const renderStatisticsChart = (statisticsCtx, labels, data) => {
+  const BAR_HEIGHT = 50;
+  statisticsCtx.height = BAR_HEIGHT * labels.length;
+
   return new Chart(statisticsCtx, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
       labels,
       datasets: [{
-        data: datasets,
+        data,
         backgroundColor: `#ffe800`,
         hoverBackgroundColor: `#ffe800`,
         anchor: `start`,
@@ -63,7 +66,9 @@ const renderStatisticsChart = (statisticsCtx, labels, datasets) => {
   });
 };
 
-const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStatisticsType, userRank) => {
+const createStatisticTemplate = ({statistics, currentStatisticsType, userRank}) => {
+  const {watched, totalDuration, topGenre} = statistics[currentStatisticsType];
+
   return `
     <section class="statistic">
       <p class="statistic__rank">
@@ -104,34 +109,52 @@ const createStatisticTemplate = ({watched, totalDuration, topGenre}, currentStat
     </section>`;
 };
 
-export default class Statistic extends AbstractView {
-  constructor(statistics, currentStatisticsType, userRank, sortedFilmsByGenres) {
+export default class Statistic extends SmartView {
+  constructor(statistics, userRank, sortedFilmsByGenres) {
     super();
-    this._statistics = statistics;
-    this._currentStatisticsType = currentStatisticsType;
-    this._userRank = userRank;
-    this._sortedFilmsByGenres = sortedFilmsByGenres;
-    this._statisticsTypeClickHandler = this._statisticsTypeClickHandler.bind(this);
+
+    this._data = {
+      statistics,
+      currentStatisticsType: StatisticsType.ALL_TIME,
+      userRank,
+      sortedFilmsByGenres,
+    };
 
     this._statisticsChart = null;
+    this._statisticsTypeClickHandler = this._statisticsTypeClickHandler.bind(this);
 
+    this._setInnerHandlers();
     this._setChart();
   }
 
   getTemplate() {
-    return createStatisticTemplate(this._statistics[this._currentStatisticsType], this._currentStatisticsType, this._userRank);
+    return createStatisticTemplate(this._data);
   }
 
-  setStatisticsTypeClickHandler(callback) {
-    this._callback.statisticsTypeClick = callback;
+  removeElement() {
+    super.removeElement();
+
+    if (this._statisticsChart !== null) {
+      this._statisticsChart = null;
+    }
+  }
+
+  _setInnerHandlers() {
     this.getElement().addEventListener(`click`, this._statisticsTypeClickHandler);
+  }
+
+  restoreHandlers() {
+    this._setChart();
+    this._setInnerHandlers();
   }
 
   _statisticsTypeClickHandler(evt) {
     evt.preventDefault();
 
     if (evt.target.classList.contains(`statistic__filters-label`)) {
-      this._callback.statisticsTypeClick(evt.target.dataset.statisticsType);
+      this.updateData({
+        currentStatisticsType: evt.target.dataset.statisticsType
+      });
     }
   }
 
@@ -140,10 +163,10 @@ export default class Statistic extends AbstractView {
       this._statisticsChart = null;
     }
 
-    const labels = Object.keys(this._sortedFilmsByGenres);
-    const datasets = Object.values(this._sortedFilmsByGenres);
+    const labels = Object.keys(this._data.sortedFilmsByGenres);
+    const data = Object.values(this._data.sortedFilmsByGenres);
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
 
-    this._statisticsChart = renderStatisticsChart(statisticCtx, labels, datasets);
+    this._statisticsChart = renderStatisticsChart(statisticCtx, labels, data);
   }
 }
