@@ -1,18 +1,19 @@
 import {remove, replace, render} from "../utils/render";
+import {UpdateType} from "../const.js";
 import CardView from "../view/film-card";
 
 export default class Film {
-  constructor(filmContainer, popupComponent, handleFilmChange) {
+  constructor(filmContainer, popupPresenter, changeFilmData) {
     this._filmContainer = filmContainer;
-    this._popupComponent = popupComponent;
+    this._popupPresenter = popupPresenter;
+    this._changeFilmData = changeFilmData;
+
     this._filmCardComponent = null;
-    this._handleFilmChange = handleFilmChange;
 
     this._filmCardInfoClickHandler = this._filmCardInfoClickHandler.bind(this);
-    this._popupCloseButtonClickHandler = this._popupCloseButtonClickHandler.bind(this);
-    this._popupEscKeyDownHandler = this._popupEscKeyDownHandler.bind(this);
-    this._filmCardControlClickHandler = this._filmCardControlClickHandler.bind(this);
-    this._popupFilmControlButtonClickHandler = this._popupFilmControlButtonClickHandler.bind(this);
+    this._handleAddToWatchListClick = this._handleAddToWatchListClick.bind(this);
+    this._handleMarkAsWatchedClick = this._handleMarkAsWatchedClick.bind(this);
+    this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
   init(film) {
@@ -21,9 +22,9 @@ export default class Film {
 
     this._filmCardComponent = new CardView(this._film);
     this._filmCardComponent.setInfoClickHandler(this._filmCardInfoClickHandler);
-    this._filmCardComponent.setAddToWatchListClickHandler(this._filmCardControlClickHandler);
-    this._filmCardComponent.setMarkAsWatchedClickHandler(this._filmCardControlClickHandler);
-    this._filmCardComponent.setFavoriteClickHandler(this._filmCardControlClickHandler);
+    this._filmCardComponent.setAddToWatchListClickHandler(this._handleAddToWatchListClick);
+    this._filmCardComponent.setMarkAsWatchedClickHandler(this._handleMarkAsWatchedClick);
+    this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
 
     if (previousFilmCardComponent === null) {
       render(this._filmContainer, this._filmCardComponent);
@@ -37,36 +38,56 @@ export default class Film {
     remove(previousFilmCardComponent);
   }
 
+  destroy() {
+    remove(this._filmCardComponent);
+  }
+
   _filmCardInfoClickHandler() {
-    this._popupComponent.setFilm(this._film);
-    this._popupComponent.setCloseButtonClickHandler(this._popupCloseButtonClickHandler);
-    this._popupComponent.setAddToWatchListChangeHandler(this._popupFilmControlButtonClickHandler);
-    this._popupComponent.setMarkAsWatchedChangeHandler(this._popupFilmControlButtonClickHandler);
-    this._popupComponent.setFavoriteChangeHandler(this._popupFilmControlButtonClickHandler);
-
-    document.addEventListener(`keydown`, this._popupEscKeyDownHandler);
-    document.body.appendChild(this._popupComponent.getElement());
-    document.body.classList.add(`hide-overflow`);
+    this._popupPresenter.init(this._film);
   }
 
-  _filmCardControlClickHandler() {
-    this._handleFilmChange(this._film);
+  _handleAddToWatchListClick() {
+    const updateType = this._film.inWatchListCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
+
+    this._changeFilmData(
+        updateType,
+        Object.assign(
+            {},
+            this._film,
+            {
+              inWatchListCollection: !this._film.inWatchListCollection
+            }
+        )
+    );
   }
 
-  _popupCloseButtonClickHandler() {
-    document.removeEventListener(`keydown`, this._popupEscKeyDownHandler);
-    document.body.classList.remove(`hide-overflow`);
-    remove(this._popupComponent);
+  _handleMarkAsWatchedClick() {
+    const updateType = this._film.inWatchedCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
+
+    this._changeFilmData(
+        updateType,
+        Object.assign(
+            {},
+            this._film,
+            {
+              inWatchedCollection: !this._film.inWatchedCollection
+            }
+        )
+    );
   }
 
-  _popupEscKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      this._popupCloseButtonClickHandler();
-    }
-  }
+  _handleFavoriteClick() {
+    const updateType = this._film.inFavoriteCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
 
-  _popupFilmControlButtonClickHandler() {
-    this._handleFilmChange(this._film);
+    this._changeFilmData(
+        updateType,
+        Object.assign(
+            {},
+            this._film,
+            {
+              inFavoriteCollection: !this._film.inFavoriteCollection
+            }
+        )
+    );
   }
 }
