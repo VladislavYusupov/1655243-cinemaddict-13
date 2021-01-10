@@ -256,11 +256,13 @@ export default class FilmList {
 
   show() {
     this._filmsComponent.show();
+    this._emptyFilmsComponent.show();
     this._visible = true;
   }
 
   hide() {
     this._filmsComponent.hide();
+    this._emptyFilmsComponent.hide();
     this._visible = false;
   }
 }

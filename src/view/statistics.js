@@ -1,70 +1,8 @@
 import SmartView from "./smart.js";
 import {StatisticsType} from "../const";
 import getFormattedTotalDuration from "../getFormattedTotalDuration";
-import Chart from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-
-const renderStatisticsChart = (statisticsCtx, labels, data) => {
-  const BAR_HEIGHT = 50;
-  statisticsCtx.height = BAR_HEIGHT * labels.length;
-
-  return new Chart(statisticsCtx, {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels,
-      datasets: [{
-        data,
-        backgroundColor: `#ffe800`,
-        hoverBackgroundColor: `#ffe800`,
-        anchor: `start`,
-        barThickness: `flex`,
-      }]
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 18
-          },
-          color: `#ffffff`,
-          anchor: `start`,
-          align: `start`,
-          offset: 40,
-        }
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#ffffff`,
-            padding: 100,
-            fontSize: 18
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          }
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false
-      }
-    }
-  });
-};
+import {getSortedFilmsByGenres} from "../utils/statistics.js";
+import renderStatisticsChart from "./statistics-chart";
 
 const createStatisticTemplate = ({statistics, currentStatisticsType, userRank}) => {
   const {watched, totalDuration, topGenre} = statistics[currentStatisticsType];
@@ -110,14 +48,13 @@ const createStatisticTemplate = ({statistics, currentStatisticsType, userRank}) 
 };
 
 export default class Statistic extends SmartView {
-  constructor(statistics, userRank, sortedFilmsByGenres) {
+  constructor(statistics, userRank) {
     super();
 
     this._data = {
       statistics,
       currentStatisticsType: StatisticsType.ALL_TIME,
       userRank,
-      sortedFilmsByGenres,
     };
 
     this._statisticsChart = null;
@@ -163,8 +100,11 @@ export default class Statistic extends SmartView {
       this._statisticsChart = null;
     }
 
-    const labels = Object.keys(this._data.sortedFilmsByGenres);
-    const data = Object.values(this._data.sortedFilmsByGenres);
+    const watchedFilmsForPeriod = this._data.statistics[this._data.currentStatisticsType].watched;
+    const sortedFilmsByGenres = getSortedFilmsByGenres(watchedFilmsForPeriod);
+
+    const labels = Object.keys(sortedFilmsByGenres);
+    const data = Object.values(sortedFilmsByGenres);
     const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
 
     this._statisticsChart = renderStatisticsChart(statisticCtx, labels, data);

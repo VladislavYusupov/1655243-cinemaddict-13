@@ -2,6 +2,7 @@ import {StatisticsType} from "../const";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isToday from "dayjs/plugin/isToday";
+import {getWatchedFilms} from "./film";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isToday);
@@ -50,7 +51,7 @@ const getFilmsByDateRange = (films, statisticsType) => {
 };
 
 const getFilmStatistics = (films) => {
-  const watched = films.filter((film) => film.inWatchedCollection === true);
+  const watched = getWatchedFilms(films);
 
   return {
     watched,

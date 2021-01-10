@@ -1,7 +1,7 @@
 import {render} from "../utils/render.js";
 import StatisticsView from "../view/statistics";
 import {StatisticsType} from "../const";
-import {getSortedFilmsByGenres, statistics} from "../utils/statistics";
+import {statistics} from "../utils/statistics";
 import getUserRank from "../getUserRank.js";
 
 export default class Statistics {
@@ -17,29 +17,28 @@ export default class Statistics {
   }
 
   init() {
-    this._films = this._filmsModel.getFilms();
-    this._currentStatistics = this._getStatistics(this._films);
-    this._userRank = getUserRank(this._films);
-    this._sortedFilmsByGenres = getSortedFilmsByGenres(this._films);
+    this._setViewData();
 
-    this._statisticsComponent = new StatisticsView(this._currentStatistics, this._userRank, this._sortedFilmsByGenres);
+    this._statisticsComponent = new StatisticsView(this._currentStatistics, this._userRank);
     render(this._statisticsContainer, this._statisticsComponent);
     this.hide();
   }
 
   _handleModelEvent() {
-    this._films = this._filmsModel.getFilms();
-    this._currentStatistics = this._getStatistics(this._films);
-    this._userRank = getUserRank(this._films);
-    this._sortedFilmsByGenres = getSortedFilmsByGenres(this._films.filter((film) => film.inWatchedCollection === true));
+    this._setViewData();
 
     this._statisticsComponent.updateData({
       statistics: this._currentStatistics,
       userRank: this._userRank,
-      sortedFilmsByGenres: this._sortedFilmsByGenres,
     });
 
     return this._statsModel.getStats() ? this.show() : this.hide();
+  }
+
+  _setViewData() {
+    this._films = this._filmsModel.getFilms();
+    this._currentStatistics = this._getStatistics(this._films);
+    this._userRank = getUserRank(this._films);
   }
 
   _getStatistics(films) {
