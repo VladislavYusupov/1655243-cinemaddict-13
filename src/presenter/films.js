@@ -22,10 +22,11 @@ const ExtraFilmName = {
 };
 
 export default class Films {
-  constructor(filmsContainer, filmsModel, filterModel) {
+  constructor(filmsContainer, filmsModel, filterModel, statsModel) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
+    this._statsModel = statsModel;
     this._renderedFilmsCount = MAX_FILMS_PER_LINE;
     this._currentSortType = SortType.DEFAULT;
 
@@ -36,6 +37,8 @@ export default class Films {
     this._filmListComponent = new FilmListView();
     this._filmListContainerComponent = new FilmListContainerView();
     this._emptyFilmsComponent = new EmptyFilmsView();
+    this._topRatedFilmListComponent = new ExtraFilmsListView(ExtraFilmName.TOP_RATED);
+    this._mostCommentedFilmListComponent = new ExtraFilmsListView(ExtraFilmName.MOST_COMMENTED);
 
     this._filmPresentersMap = new Map();
     this._topRatedFilmPresentersMap = new Map();
@@ -53,7 +56,9 @@ export default class Films {
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+    this._statsModel.addObserver(this._handleModelEvent);
 
+    render(this._filmsContainer, this._filmsComponent);
     this._renderSortAndFilms();
   }
 
@@ -92,6 +97,14 @@ export default class Films {
       case UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS:
         this._clearFilms({resetRenderedFilmsCount: true, resetSortType: true});
         this._renderSortAndFilms();
+        break;
+      case UpdateType.RENDER_OTHER_PAGE:
+        if (this._statsModel.getStatsState()) {
+          this.hide();
+        } else {
+          this.show();
+        }
+
         break;
     }
   }
@@ -163,12 +176,11 @@ export default class Films {
       .slice(0, MAX_EXTRA_FILMS_COUNT);
   }
 
-  _renderExtraFilms(title, films) {
-    const extraFilmListComponent = new ExtraFilmsListView(title);
+  _renderExtraFilms(extraFilmsContainer, title, films) {
     const extraFilmListContainerComponent = new FilmListContainerView();
 
-    render(this._filmsComponent, extraFilmListComponent);
-    render(extraFilmListComponent, extraFilmListContainerComponent);
+    render(this._filmsComponent, extraFilmsContainer);
+    render(extraFilmsContainer, extraFilmListContainerComponent);
 
     films.forEach((film) => this._renderExtraFilm(extraFilmListContainerComponent, film, title));
   }
@@ -197,12 +209,13 @@ export default class Films {
     this._filmPresentersMap.forEach((presenter) => presenter.destroy());
     this._filmPresentersMap.clear();
 
-    remove(this._filmsComponent);
     remove(this._sortComponent);
     remove(this._filmListComponent);
     remove(this._filmListContainerComponent);
     remove(this._emptyFilmsComponent);
     remove(this._showMoreButtonComponent);
+    remove(this._topRatedFilmListComponent);
+    remove(this._mostCommentedFilmListComponent);
 
     if (resetRenderedFilmsCount) {
       this._renderedFilmsCount = MAX_FILMS_PER_LINE;
@@ -214,7 +227,7 @@ export default class Films {
   }
 
   _renderNoFilms() {
-    render(this._filmsContainer, this._emptyFilmsComponent);
+    render(this._filmsComponent, this._emptyFilmsComponent);
   }
 
   _renderSortAndFilms() {
@@ -228,7 +241,6 @@ export default class Films {
 
     this._renderSort();
 
-    render(this._filmsContainer, this._filmsComponent);
     render(this._filmsComponent, this._filmListComponent);
     render(this._filmListComponent, this._filmListContainerComponent);
     this._renderFilms(films.slice(0, Math.min(filmsCount, this._renderedFilmsCount)));
@@ -237,7 +249,17 @@ export default class Films {
       this._renderShowMoreButton();
     }
 
-    this._renderExtraFilms(ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
-    this._renderExtraFilms(ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
+    this._renderExtraFilms(this._topRatedFilmListComponent, ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
+    this._renderExtraFilms(this._mostCommentedFilmListComponent, ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
+  }
+
+  show() {
+    this._filmsComponent.show();
+    this._emptyFilmsComponent.show();
+  }
+
+  hide() {
+    this._filmsComponent.hide();
+    this._emptyFilmsComponent.hide();
   }
 }

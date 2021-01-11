@@ -1,13 +1,14 @@
-import FilterView from "../view/menu-navigation.js";
+import FilterView from "../view/menu-navigation-filters.js";
 import {render, replace, remove} from "../utils/render.js";
 import {FilterType, UpdateType} from "../const.js";
 import {filter} from "../utils/filter.js";
 
 export default class Filter {
-  constructor(filterContainer, filterModel, filmsModel) {
+  constructor(filterContainer, filterModel, filmsModel, statsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
+    this._statsModel = statsModel;
     this._currentFilter = null;
 
     this._filterComponent = null;
@@ -47,6 +48,7 @@ export default class Filter {
     }
 
     this._filterModel.setFilter(UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS, filterType);
+    this._statsModel.setStatsState(UpdateType.RENDER_OTHER_PAGE, false);
   }
 
   _getFilters() {

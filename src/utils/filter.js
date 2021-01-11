@@ -1,6 +1,7 @@
 import {FilterType} from "../const";
 
 export const filter = {
+  [FilterType.NONE]: (films) => films,
   [FilterType.ALL]: (films) => films,
   [FilterType.WATCHLIST]: (films) => films.filter((film) => film.inWatchListCollection === true),
   [FilterType.HISTORY]: (films) => films.filter((film) => film.inWatchedCollection === true),
