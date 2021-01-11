@@ -21,11 +21,12 @@ const ExtraFilmName = {
   MOST_COMMENTED: `Most commented`,
 };
 
-export default class Films {
-  constructor(filmsContainer, filmsModel, filterModel) {
+export default class FilmList {
+  constructor(filmsContainer, filmsModel, filterModel, statsModel) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
+    this._statsModel = statsModel;
     this._renderedFilmsCount = MAX_FILMS_PER_LINE;
     this._currentSortType = SortType.DEFAULT;
 
@@ -53,6 +54,9 @@ export default class Films {
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+    this._statsModel.addObserver(this._handleModelEvent);
+
+    this._visible = true;
 
     this._renderSortAndFilms();
   }
@@ -92,6 +96,14 @@ export default class Films {
       case UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS:
         this._clearFilms({resetRenderedFilmsCount: true, resetSortType: true});
         this._renderSortAndFilms();
+        break;
+      case UpdateType.SWITCH_SCREEN:
+        if (this._visible) {
+          this.hide();
+        } else {
+          this.show();
+        }
+
         break;
     }
   }
@@ -239,5 +251,17 @@ export default class Films {
 
     this._renderExtraFilms(ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
     this._renderExtraFilms(ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
+  }
+
+  show() {
+    this._filmsComponent.show();
+    this._emptyFilmsComponent.show();
+    this._visible = true;
+  }
+
+  hide() {
+    this._filmsComponent.hide();
+    this._emptyFilmsComponent.hide();
+    this._visible = false;
   }
 }

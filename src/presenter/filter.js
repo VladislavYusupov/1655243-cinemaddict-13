@@ -1,22 +1,23 @@
-import FilterView from "../view/menu-navigation.js";
+import FilterView from "../view/menu-navigation-filters.js";
 import {render, replace, remove} from "../utils/render.js";
 import {FilterType, UpdateType} from "../const.js";
 import {filter} from "../utils/filter.js";
 
 export default class Filter {
-  constructor(filterContainer, filterModel, filmsModel) {
+  constructor(filterContainer, filterModel, filmsModel, statsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._filmsModel = filmsModel;
+    this._statsModel = statsModel;
     this._currentFilter = null;
 
     this._filterComponent = null;
 
-    this._handleModelEvent = this._handleModelEvent.bind(this);
+    this._handleFilterModelEvent = this._handleFilterModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
-    this._filmsModel.addObserver(this._handleModelEvent);
-    this._filterModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleFilterModelEvent);
+    this._filterModel.addObserver(this._handleFilterModelEvent);
   }
 
   init() {
@@ -37,7 +38,7 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
-  _handleModelEvent() {
+  _handleFilterModelEvent() {
     this.init();
   }
 
@@ -46,7 +47,8 @@ export default class Filter {
       return;
     }
 
-    this._filterModel.setFilter(UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS, filterType);
+    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this._statsModel.setStats(null, false);
   }
 
   _getFilters() {
