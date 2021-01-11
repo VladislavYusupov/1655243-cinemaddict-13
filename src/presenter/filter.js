@@ -48,7 +48,7 @@ export default class Filter {
     }
 
     this._filterModel.setFilter(UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS, filterType);
-    this._statsModel.setStats(null, false);
+    this._statsModel.setStats(UpdateType.RENDER_OTHER_PAGE, false);
   }
 
   _getFilters() {
