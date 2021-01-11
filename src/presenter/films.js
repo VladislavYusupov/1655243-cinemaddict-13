@@ -21,7 +21,7 @@ const ExtraFilmName = {
   MOST_COMMENTED: `Most commented`,
 };
 
-export default class FilmList {
+export default class Films {
   constructor(filmsContainer, filmsModel, filterModel, statsModel) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
@@ -55,8 +55,6 @@ export default class FilmList {
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
     this._statsModel.addObserver(this._handleModelEvent);
-
-    this._visible = true;
 
     this._renderSortAndFilms();
   }
@@ -97,8 +95,8 @@ export default class FilmList {
         this._clearFilms({resetRenderedFilmsCount: true, resetSortType: true});
         this._renderSortAndFilms();
         break;
-      case UpdateType.SWITCH_SCREEN:
-        if (this._visible) {
+      case UpdateType.RENDER_OTHER_PAGE:
+        if (this._statsModel.getStats()) {
           this.hide();
         } else {
           this.show();
@@ -256,12 +254,10 @@ export default class FilmList {
   show() {
     this._filmsComponent.show();
     this._emptyFilmsComponent.show();
-    this._visible = true;
   }
 
   hide() {
     this._filmsComponent.hide();
     this._emptyFilmsComponent.hide();
-    this._visible = false;
   }
 }

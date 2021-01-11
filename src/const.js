@@ -13,10 +13,10 @@ export const FilterType = {
 };
 
 export const UpdateType = {
-  PATCH: `PATCH`,
-  MINOR: `MINOR`,
-  MAJOR: `MAJOR`,
-  SWITCH_SCREEN: `SWITCH_SCREEN`,
+  RERENDER_SINGLE_LIST_ITEM: `rerenderSingleListItem`,
+  RERENDER_WITH_CURRENT_PRESENTER_SETTINGS: `rerenderWithCurrentPresenterSettings`,
+  RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS: `rerenderWithDefaultPresenterSettings`,
+  RENDER_OTHER_PAGE: `renderOtherPage`,
 };
 
 export const StatisticsType = {

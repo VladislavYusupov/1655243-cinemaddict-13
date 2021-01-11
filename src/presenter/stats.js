@@ -39,7 +39,7 @@ export default class Stats {
   }
 
   _handleStatsClick() {
-    this._statsModel.updateStats(UpdateType.SWITCH_SCREEN);
+    this._statsModel.updateStats(UpdateType.RENDER_OTHER_PAGE);
 
     if (this._statsModel.getStats()) {
       this._filterModel.setFilter(null, FilterType.NONE);

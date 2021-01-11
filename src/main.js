@@ -1,10 +1,10 @@
-import FooterStatisticView from "./view/footer-statistic";
+import FooterStatisticView from "./view/footer-statistics";
 import {generateFilm} from "./mock/film";
 import {render} from "./utils/render";
 import FilmsModel from "./model/films";
 import FilterModel from "./model/filter";
 import StatsModel from "./model/stats";
-import FilmListPresenter from "./presenter/film-list";
+import FilmsPresenter from "./presenter/films";
 import FilterPresenter from "./presenter/filter";
 import StatsPresenter from "./presenter/stats";
 import StatisticsPresenter from "./presenter/statistics";
@@ -28,7 +28,7 @@ const filmsModel = new FilmsModel();
 filmsModel.setFilms(films);
 
 const profilePresenter = new ProfilePresenter(headerElement, filmsModel);
-const filmListPresenter = new FilmListPresenter(mainElement, filmsModel, filterModel, statsModel);
+const filmsPresenter = new FilmsPresenter(mainElement, filmsModel, filterModel, statsModel);
 const filterPresenter = new FilterPresenter(menuNavigationComponent, filterModel, filmsModel, statsModel);
 const statsPresenter = new StatsPresenter(menuNavigationComponent, filterModel, statsModel, filmsModel);
 const statisticsPresenter = new StatisticsPresenter(mainElement, statsModel, filmsModel);
@@ -39,5 +39,5 @@ render(footerStatisticsElement, new FooterStatisticView(films));
 profilePresenter.init();
 filterPresenter.init();
 statsPresenter.init();
-filmListPresenter.init();
+filmsPresenter.init();
 statisticsPresenter.init();
