@@ -1,16 +1,16 @@
 import AbstractView from "./abstract.js";
 
-const createEmojiImageTemplate = (emoji) => {
+const createPopupCommentEmojiTemplate = (emoji) => {
   return emoji ? `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-${emoji}">` : ``;
 };
 
-export default class EmojiImage extends AbstractView {
+export default class PopupCommentEmoji extends AbstractView {
   constructor(emoji) {
     super();
     this._emoji = emoji;
   }
 
   getTemplate() {
-    return createEmojiImageTemplate(this._emoji);
+    return createPopupCommentEmojiTemplate(this._emoji);
   }
 }

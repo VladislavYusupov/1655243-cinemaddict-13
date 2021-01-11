@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 
 dayjs.extend(relativeTime);
 
-const createPopupCommentTemplate = ({message, emoji, author, date}) => {
+const createPopupCommentTemplate = ({id, message, emoji, author, date}) => {
   return `
     <li class="film-details__comment">
       <span class="film-details__comment-emoji">
@@ -17,7 +17,7 @@ const createPopupCommentTemplate = ({message, emoji, author, date}) => {
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${author}</span>
           <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
-          <button class="film-details__comment-delete">Delete</button>
+          <button class="film-details__comment-delete" data-id=${id}>Delete</button>
         </p>
       </div>
     </li>`;
