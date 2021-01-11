@@ -99,7 +99,7 @@ export default class Films {
         this._renderSortAndFilms();
         break;
       case UpdateType.RENDER_OTHER_PAGE:
-        if (this._statsModel.getStats()) {
+        if (this._statsModel.getStatsState()) {
           this.hide();
         } else {
           this.show();

@@ -13,11 +13,11 @@ export default class Filter {
 
     this._filterComponent = null;
 
-    this._handleFilterModelEvent = this._handleFilterModelEvent.bind(this);
+    this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleFilterTypeChange = this._handleFilterTypeChange.bind(this);
 
-    this._filmsModel.addObserver(this._handleFilterModelEvent);
-    this._filterModel.addObserver(this._handleFilterModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -38,7 +38,7 @@ export default class Filter {
     remove(prevFilterComponent);
   }
 
-  _handleFilterModelEvent() {
+  _handleModelEvent() {
     this.init();
   }
 
@@ -48,7 +48,7 @@ export default class Filter {
     }
 
     this._filterModel.setFilter(UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS, filterType);
-    this._statsModel.setStats(UpdateType.RENDER_OTHER_PAGE, false);
+    this._statsModel.setStatsState(UpdateType.RENDER_OTHER_PAGE, false);
   }
 
   _getFilters() {

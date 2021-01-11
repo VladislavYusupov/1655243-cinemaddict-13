@@ -8,7 +8,6 @@ export default class Stats {
     this._filterModel = filterModel;
     this._statsModel = statsModel;
     this._filmsModel = filmsModel;
-    this._isActiveStats = false;
 
     this._menuNavigationStatsComponent = null;
 
@@ -19,10 +18,10 @@ export default class Stats {
   }
 
   init() {
-    this._isActiveStats = this._statsModel.getStats();
+    this._statsState = this._statsModel.getStatsState();
     const prevMenuNavigationStatsComponent = this._menuNavigationStatsComponent;
 
-    this._menuNavigationStatsComponent = new MenuNavigationStatsView(this._isActiveStats);
+    this._menuNavigationStatsComponent = new MenuNavigationStatsView(this._statsState);
     this._menuNavigationStatsComponent.setClickHandler(this._handleStatsClick);
 
     if (prevMenuNavigationStatsComponent === null) {
@@ -39,9 +38,9 @@ export default class Stats {
   }
 
   _handleStatsClick() {
-    this._statsModel.updateStats(UpdateType.RENDER_OTHER_PAGE);
+    this._statsModel.updateStatsState(UpdateType.RENDER_OTHER_PAGE);
 
-    if (this._statsModel.getStats()) {
+    if (this._statsModel.getStatsState()) {
       this._filterModel.setFilter(null, FilterType.NONE);
     } else {
       this._filterModel.setFilter(UpdateType.RERENDER_WITH_DEFAULT_PRESENTER_SETTINGS, FilterType.ALL);

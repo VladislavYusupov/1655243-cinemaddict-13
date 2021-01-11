@@ -3,20 +3,20 @@ import Observer from "../utils/observer.js";
 export default class Stats extends Observer {
   constructor() {
     super();
-    this._isActive = false;
+    this._statsState = false;
   }
 
-  getStats() {
-    return this._isActive;
+  getStatsState() {
+    return this._statsState;
   }
 
-  setStats(updateType, state) {
-    this._isActive = state;
-    this._notify(updateType, this._isActive);
+  setStatsState(updateType, state) {
+    this._statsState = state;
+    this._notify(updateType, this._statsState);
   }
 
-  updateStats(updateType) {
-    this._isActive = !this._isActive;
-    this._notify(updateType, this._isActive);
+  updateStatsState(updateType) {
+    this._statsState = !this._statsState;
+    this._notify(updateType, this._statsState);
   }
 }

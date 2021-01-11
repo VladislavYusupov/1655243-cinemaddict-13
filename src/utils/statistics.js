@@ -7,28 +7,6 @@ import {getWatchedFilms} from "./film";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isToday);
 
-export const getSortedFilmsByGenres = (films) => {
-  const filmCountByGenres = {};
-
-  films.forEach((film) =>
-    film.genres.forEach((genre) => {
-      if (genre in filmCountByGenres) {
-        filmCountByGenres[genre] += 1;
-      } else {
-        filmCountByGenres[genre] = 1;
-      }
-    })
-  );
-
-  const sortedFilmsByGenres = Object.fromEntries(
-      Object
-        .entries(filmCountByGenres)
-        .sort(([, a], [, b]) => b - a)
-  );
-
-  return sortedFilmsByGenres;
-};
-
 const getTopGenre = (films) => {
   const sortedFilmsByGenres = getSortedFilmsByGenres(films);
 
@@ -58,6 +36,28 @@ const getFilmStatistics = (films) => {
     totalDuration: watched.reduce((acc, current) => acc + current.runtime, 0),
     topGenre: getTopGenre(watched),
   };
+};
+
+export const getSortedFilmsByGenres = (films) => {
+  const filmCountByGenres = {};
+
+  films.forEach((film) =>
+    film.genres.forEach((genre) => {
+      if (genre in filmCountByGenres) {
+        filmCountByGenres[genre] += 1;
+      } else {
+        filmCountByGenres[genre] = 1;
+      }
+    })
+  );
+
+  const sortedFilmsByGenres = Object.fromEntries(
+      Object
+        .entries(filmCountByGenres)
+        .sort(([, a], [, b]) => b - a)
+  );
+
+  return sortedFilmsByGenres;
 };
 
 export const statistics = {

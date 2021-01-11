@@ -32,7 +32,7 @@ export default class Statistics {
       userRank: this._userRank,
     });
 
-    return this._statsModel.getStats() ? this.show() : this.hide();
+    return this._statsModel.getStatsState() ? this.show() : this.hide();
   }
 
   _setViewData() {
