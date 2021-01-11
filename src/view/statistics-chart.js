@@ -1,11 +1,11 @@
 import Chart from "chart.js";
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-const renderStatisticsChart = (statisticsCtx, labels, data) => {
+const renderStatisticsChart = (statisticsCanvasElement, labels, data) => {
   const BAR_HEIGHT = 50;
-  statisticsCtx.height = BAR_HEIGHT * labels.length;
+  statisticsCanvasElement.height = BAR_HEIGHT * labels.length;
 
-  return new Chart(statisticsCtx, {
+  return new Chart(statisticsCanvasElement, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {

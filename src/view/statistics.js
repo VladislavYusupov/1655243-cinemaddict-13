@@ -105,8 +105,8 @@ export default class Statistic extends SmartView {
 
     const labels = Object.keys(sortedFilmsByGenres);
     const data = Object.values(sortedFilmsByGenres);
-    const statisticCtx = this.getElement().querySelector(`.statistic__chart`);
+    const statisticsCanvasElement = this.getElement().querySelector(`.statistic__chart`);
 
-    this._statisticsChart = renderStatisticsChart(statisticCtx, labels, data);
+    this._statisticsChart = renderStatisticsChart(statisticsCanvasElement, labels, data);
   }
 }
