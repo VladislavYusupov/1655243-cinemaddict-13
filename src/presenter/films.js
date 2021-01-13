@@ -4,6 +4,7 @@ import FilmListView from "../view/film-list";
 import FilmListContainerView from "../view/film-list-container";
 import PopupView from "../view/popup";
 import SortView from "../view/sort";
+import LoadingView from "../view/loading";
 import EmptyFilmsView from "../view/empty-films";
 import ExtraFilmsListView from "../view/extra-films-list";
 import ShowMoreButtonView from "../view/show-more-button";
@@ -32,6 +33,7 @@ export default class Films {
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._isLoading = true;
 
     this._filmsComponent = new FilmsView();
     this._filmListComponent = new FilmListView();
@@ -39,6 +41,7 @@ export default class Films {
     this._emptyFilmsComponent = new EmptyFilmsView();
     this._topRatedFilmListComponent = new ExtraFilmsListView(ExtraFilmName.TOP_RATED);
     this._mostCommentedFilmListComponent = new ExtraFilmsListView(ExtraFilmName.MOST_COMMENTED);
+    this._loadingComponent = new LoadingView();
 
     this._filmPresentersMap = new Map();
     this._topRatedFilmPresentersMap = new Map();
@@ -104,7 +107,11 @@ export default class Films {
         } else {
           this.show();
         }
-
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderSortAndFilms();
         break;
     }
   }
@@ -128,6 +135,10 @@ export default class Films {
     this._sortComponent.setClickHandler(this._handleSortTypeChange);
 
     render(this._filmsComponent, this._sortComponent);
+  }
+
+  _renderLoading() {
+    render(this._filmsComponent, this._loadingComponent);
   }
 
   _renderFilms(films) {
@@ -209,6 +220,7 @@ export default class Films {
     this._filmPresentersMap.forEach((presenter) => presenter.destroy());
     this._filmPresentersMap.clear();
 
+    remove(this._loadingComponent);
     remove(this._sortComponent);
     remove(this._filmListComponent);
     remove(this._filmListContainerComponent);
@@ -231,6 +243,11 @@ export default class Films {
   }
 
   _renderSortAndFilms() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmsCount = films.length;
 

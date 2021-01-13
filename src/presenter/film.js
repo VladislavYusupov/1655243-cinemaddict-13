@@ -47,7 +47,7 @@ export default class Film {
   }
 
   _handleAddToWatchListClick() {
-    const updateType = this._film.inWatchListCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
+    const updateType = this._film.watchList ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
 
     this._changeFilmData(
         updateType,
@@ -55,14 +55,14 @@ export default class Film {
             {},
             this._film,
             {
-              inWatchListCollection: !this._film.inWatchListCollection
+              watchList: !this._film.watchList
             }
         )
     );
   }
 
   _handleMarkAsWatchedClick() {
-    const updateType = this._film.inWatchedCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
+    const updateType = this._film.alreadyWatched ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
 
     this._changeFilmData(
         updateType,
@@ -70,14 +70,14 @@ export default class Film {
             {},
             this._film,
             {
-              inWatchedCollection: !this._film.inWatchedCollection
+              alreadyWatched: !this._film.alreadyWatched
             }
         )
     );
   }
 
   _handleFavoriteClick() {
-    const updateType = this._film.inFavoriteCollection ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
+    const updateType = this._film.favorite ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
 
     this._changeFilmData(
         updateType,
@@ -85,7 +85,7 @@ export default class Film {
             {},
             this._film,
             {
-              inFavoriteCollection: !this._film.inFavoriteCollection
+              favorite: !this._film.favorite
             }
         )
     );

@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
 import he from "he";
 
-const createPopupTemplate = ({title, titleOriginal, director, writers, actors, releaseDate, comments, runtime, country, genres, age, poster, description, rating, inWatchListCollection, inWatchedCollection, inFavoriteCollection, emojiSelected = null, newComment = null}) => {
+const createPopupTemplate = ({title, alternativeTitle, director, writers, actors, releaseDate, comments, runtime, country, genre, ageRating, poster, description, totalRating, watchList, alreadyWatched, favorite, emojiSelected = null, newComment = null}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -20,17 +20,17 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
           </div>
           <div class="film-details__info-wrap">
             <div class="film-details__poster">
-              <img class="film-details__poster-img" src="./images/posters/${poster}" alt="${title}">
-              <p class="film-details__age">${age}</p>
+              <img class="film-details__poster-img" src="./${poster}" alt="${title}">
+              <p class="film-details__age">${ageRating}+</p>
             </div>
             <div class="film-details__info">
               <div class="film-details__info-head">
                 <div class="film-details__title-wrap">
                   <h3 class="film-details__title">${title}</h3>
-                  <p class="film-details__title-original">${titleOriginal}</p>
+                  <p class="film-details__title-original">${alternativeTitle}</p>
                 </div>
                 <div class="film-details__rating">
-                  <p class="film-details__total-rating">${rating}</p>
+                  <p class="film-details__total-rating">${totalRating}</p>
                 </div>
               </div>
               <table class="film-details__table">
@@ -60,7 +60,7 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
                 </tr>
                 <tr class="film-details__row">
                   <td class="film-details__term">Genres</td>
-                  <td class="film-details__cell">${createPopupElements(genres, PopupGenreView)}</td>
+                  <td class="film-details__cell">${createPopupElements(genre, PopupGenreView)}</td>
                 </tr>
               </table>
               <p class="film-details__film-description">
@@ -69,11 +69,11 @@ const createPopupTemplate = ({title, titleOriginal, director, writers, actors, r
             </div>
           </div>
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${inWatchListCollection ? ` checked` : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${watchList ? ` checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${inWatchedCollection ? ` checked` : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${alreadyWatched ? ` checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${inFavoriteCollection ? ` checked` : ``}>
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favorite ? ` checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -241,7 +241,7 @@ export default class Popup extends SmartView {
 
     this.updateData(
         {
-          inWatchListCollection: !this._data.inWatchListCollection
+          watchList: !this._data.watchList
         },
         true
     );
@@ -254,7 +254,7 @@ export default class Popup extends SmartView {
 
     this.updateData(
         {
-          inWatchedCollection: !this._data.inWatchedCollection
+          alreadyWatched: !this._data.alreadyWatched
         },
         true
     );
@@ -267,7 +267,7 @@ export default class Popup extends SmartView {
 
     this.updateData(
         {
-          inFavoriteCollection: !this._data.inFavoriteCollection
+          favorite: !this._data.favorite
         },
         true
     );

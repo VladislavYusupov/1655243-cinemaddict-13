@@ -3,7 +3,7 @@ import {FilterType} from "../const";
 export const filter = {
   [FilterType.NONE]: (films) => films,
   [FilterType.ALL]: (films) => films,
-  [FilterType.WATCHLIST]: (films) => films.filter((film) => film.inWatchListCollection === true),
-  [FilterType.HISTORY]: (films) => films.filter((film) => film.inWatchedCollection === true),
-  [FilterType.FAVORITES]: (films) => films.filter((film) => film.inFavoriteCollection === true)
+  [FilterType.WATCHLIST]: (films) => films.filter((film) => film.watchList === true),
+  [FilterType.HISTORY]: (films) => films.filter((film) => film.alreadyWatched === true),
+  [FilterType.FAVORITES]: (films) => films.filter((film) => film.favorite === true)
 };

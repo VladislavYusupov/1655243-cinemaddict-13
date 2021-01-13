@@ -1,4 +1,6 @@
+import {trimDescription} from "../helpers/trimDescription";
 import Observer from "../utils/observer";
+import dayjs from "dayjs";
 
 export default class Films extends Observer {
   constructor() {
@@ -10,8 +12,10 @@ export default class Films extends Observer {
     return this._films;
   }
 
-  setFilms(films) {
+  setFilms(updateType, films) {
     this._films = [...films];
+
+    this._notify(updateType);
   }
 
   updateFilm(updateType, update) {
@@ -53,9 +57,10 @@ export default class Films extends Observer {
       runtime,
       genre,
       description,
+      shortDescription: trimDescription(description),
       watchList: watchlist,
       alreadyWatched: userDetails.already_watched,
-      watchingDate: userDetails.watching_date !== null ? new Date(userDetails.watching_date) : userDetails.watching_date,
+      watchingDate: userDetails.watching_date !== null ? dayjs(userDetails.watching_date) : userDetails.watching_date,
       favorite
     };
 
