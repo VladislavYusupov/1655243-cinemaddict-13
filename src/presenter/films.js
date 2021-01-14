@@ -112,7 +112,7 @@ export default class Films {
           this.show();
         }
         break;
-      case UpdateType.INIT:
+      case UpdateType.LOAD_FILMS:
         this._isLoading = false;
         remove(this._loadingComponent);
         this._renderSortAndFilms();

@@ -44,11 +44,11 @@ statisticsPresenter.init();
 
 api.getFilms()
   .then((films) => {
-    filmsModel.setFilms(UpdateType.INIT, films);
+    filmsModel.setFilms(UpdateType.LOAD_FILMS, films);
     render(footerStatisticsElement, new FooterStatisticView(films));
   })
   .catch(() => {
     const emptyFilms = [];
-    filmsModel.setFilms(UpdateType.INIT, emptyFilms);
+    filmsModel.setFilms(UpdateType.LOAD_FILMS, emptyFilms);
     render(footerStatisticsElement, new FooterStatisticView(emptyFilms));
   });

@@ -43,7 +43,7 @@ export default class Filter {
   }
 
   _handleModelEvent(updateType) {
-    if (updateType === UpdateType.INIT) {
+    if (updateType === UpdateType.LOAD_FILMS) {
       this._isLoading = false;
     }
 

@@ -39,7 +39,7 @@ export default class Stats {
   }
 
   _handleModelEvent(updateType) {
-    if (updateType === UpdateType.INIT) {
+    if (updateType === UpdateType.LOAD_FILMS) {
       this._isLoading = false;
     }
 
