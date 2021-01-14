@@ -69,10 +69,31 @@ export default class Films extends Observer {
 
   static adaptToServer(film) {
     const adaptedFilm = {
-      "watchlist": film.watchList,
-      "already_watched": film.alreadyWatched,
-      "watching_date": film.watchingDate instanceof Date ? film.watchingDate.toISOString() : null,
-      "favorite": film.favorite
+      "id": film.id,
+      "comments": film.comments,
+      "film_info": {
+        "title": film.title,
+        "alternative_title": film.alternativeTitle,
+        "total_rating": film.totalRating,
+        "poster": film.poster,
+        "age_rating": film.ageRating,
+        "director": film.director,
+        "writers": film.writers,
+        "actors": film.actors,
+        "release": {
+          "date": film.releaseDate instanceof Date ? film.releaseDate.toISOString() : null,
+          "release_country": film.country,
+        },
+        "runtime": film.runtime,
+        "genre": film.genre,
+        "description": film.description,
+      },
+      "user_details": {
+        "watchlist": film.watchList,
+        "already_watched": film.alreadyWatched,
+        "watching_date": film.watchingDate instanceof Date ? film.watchingDate.toISOString() : null,
+        "favorite": film.favorite
+      }
     };
 
     return adaptedFilm;

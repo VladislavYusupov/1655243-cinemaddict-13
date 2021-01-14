@@ -23,11 +23,12 @@ const ExtraFilmName = {
 };
 
 export default class Films {
-  constructor(filmsContainer, filmsModel, filterModel, statsModel) {
+  constructor(filmsContainer, filmsModel, filterModel, statsModel, api) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._statsModel = statsModel;
+    this._api = api;
     this._renderedFilmsCount = MAX_FILMS_PER_LINE;
     this._currentSortType = SortType.DEFAULT;
 
@@ -55,7 +56,7 @@ export default class Films {
   }
 
   init() {
-    this._popupPresenter = new PopupPresenter(new PopupView(), this._handleViewAction);
+    this._popupPresenter = new PopupPresenter(new PopupView(), this._handleViewAction, this._api);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -83,7 +84,10 @@ export default class Films {
   }
 
   _handleViewAction(updateType, update) {
-    this._filmsModel.updateFilm(updateType, update);
+    this._api.updateFilm(update)
+      .then((response) => {
+        this._filmsModel.updateFilm(updateType, response);
+      });
   }
 
   _handleModelEvent(updateType, data) {

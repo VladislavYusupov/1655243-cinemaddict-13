@@ -13,7 +13,7 @@ import Api from "./api";
 import {UpdateType} from "./const";
 
 const AUTHORIZATION = `Basic er883jdzbdw`;
-const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict/`;
+const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
 const api = new Api(END_POINT, AUTHORIZATION);
 
@@ -29,7 +29,7 @@ const statsModel = new StatsModel();
 const filmsModel = new FilmsModel();
 
 const profilePresenter = new ProfilePresenter(headerElement, filmsModel);
-const filmsPresenter = new FilmsPresenter(mainElement, filmsModel, filterModel, statsModel);
+const filmsPresenter = new FilmsPresenter(mainElement, filmsModel, filterModel, statsModel, api);
 const filterPresenter = new FilterPresenter(menuNavigationComponent, filterModel, filmsModel, statsModel);
 const statsPresenter = new StatsPresenter(menuNavigationComponent, filterModel, statsModel, filmsModel);
 const statisticsPresenter = new StatisticsPresenter(mainElement, statsModel, filmsModel);
@@ -46,4 +46,9 @@ api.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
     render(footerStatisticsElement, new FooterStatisticView(films));
+  })
+  .catch(() => {
+    const emptyFilms = [];
+    filmsModel.setFilms(UpdateType.INIT, emptyFilms);
+    render(footerStatisticsElement, new FooterStatisticView(emptyFilms));
   });
