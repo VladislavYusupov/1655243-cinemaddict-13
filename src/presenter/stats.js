@@ -8,6 +8,7 @@ export default class Stats {
     this._filterModel = filterModel;
     this._statsModel = statsModel;
     this._filmsModel = filmsModel;
+    this._isLoading = true;
 
     this._menuNavigationStatsComponent = null;
 
@@ -15,6 +16,7 @@ export default class Stats {
     this._handleStatsClick = this._handleStatsClick.bind(this);
 
     this._statsModel.addObserver(this._handleModelEvent);
+    this._filmsModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -22,7 +24,10 @@ export default class Stats {
     const prevMenuNavigationStatsComponent = this._menuNavigationStatsComponent;
 
     this._menuNavigationStatsComponent = new MenuNavigationStatsView(this._statsState);
-    this._menuNavigationStatsComponent.setClickHandler(this._handleStatsClick);
+
+    if (!this._isLoading) {
+      this._menuNavigationStatsComponent.setClickHandler(this._handleStatsClick);
+    }
 
     if (prevMenuNavigationStatsComponent === null) {
       render(this._statsContainer, this._menuNavigationStatsComponent);
@@ -33,7 +38,11 @@ export default class Stats {
     remove(prevMenuNavigationStatsComponent);
   }
 
-  _handleModelEvent() {
+  _handleModelEvent(updateType) {
+    if (updateType === UpdateType.INIT) {
+      this._isLoading = false;
+    }
+
     this.init();
   }
 
