@@ -12,10 +12,10 @@ import MenuNavigationView from "./view/menu-navigation";
 import Api from "./api";
 import {UpdateType} from "./const";
 
-const AUTHORIZATION = `Basic er883jdzbdw`;
+const AUTH_TOKEN = `er883jdzbdw`;
 const END_POINT = `https://13.ecmascript.pages.academy/cinemaddict`;
 
-const api = new Api(END_POINT, AUTHORIZATION);
+const api = new Api(END_POINT, AUTH_TOKEN);
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -44,11 +44,12 @@ statisticsPresenter.init();
 
 api.getFilms()
   .then((films) => {
-    filmsModel.setFilms(UpdateType.LOAD_FILMS, films);
-    render(footerStatisticsElement, new FooterStatisticView(films));
+    return films;
   })
   .catch(() => {
-    const emptyFilms = [];
-    filmsModel.setFilms(UpdateType.LOAD_FILMS, emptyFilms);
-    render(footerStatisticsElement, new FooterStatisticView(emptyFilms));
+    return [];
+  })
+  .then((films) => {
+    filmsModel.setFilms(UpdateType.LOAD_FILMS, films);
+    render(footerStatisticsElement, new FooterStatisticView(films));
   });

@@ -12,10 +12,12 @@ const SuccessHTTPStatusRange = {
   MAX: 299
 };
 
+const AUTH_TYPE = `Basic`;
+
 export default class Api {
-  constructor(endPoint, authorization) {
+  constructor(endPoint, authToken) {
     this._endPoint = endPoint;
-    this._authorization = authorization;
+    this._authToken = authToken;
   }
 
   getFilms() {
@@ -46,21 +48,18 @@ export default class Api {
     body = null,
     headers = new Headers()
   }) {
-    headers.append(`Authorization`, this._authorization);
+    headers.append(`Authorization`, `${AUTH_TYPE} ${this._authToken}`);
 
-    return fetch(
-        `${this._endPoint}/${url}`,
-        {method, body, headers}
-    )
+    url = `${this._endPoint}/${url}`;
+    const data = {method, body, headers};
+
+    return fetch(url, data)
       .then(Api.checkStatus)
       .catch(Api.catchError);
   }
 
   static checkStatus(response) {
-    if (
-      response.status < SuccessHTTPStatusRange.MIN ||
-      response.status > SuccessHTTPStatusRange.MAX
-    ) {
+    if (response.status < SuccessHTTPStatusRange.MIN || response.status > SuccessHTTPStatusRange.MAX) {
       throw new Error(`${response.status}: ${response.statusText}`);
     }
 
