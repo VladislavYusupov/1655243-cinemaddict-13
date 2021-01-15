@@ -1,7 +1,6 @@
 import {remove} from "../utils/render";
 import {UpdateType} from "../const.js";
 import CommentsModel from "../model/comments";
-import {nanoid} from "nanoid";
 
 export default class Popup {
   constructor(popupComponent, changeFilmData, api) {
@@ -44,29 +43,18 @@ export default class Popup {
   }
 
   _handleDataAfterClick(film) {
-    film.comments = film.comments.map((comment) => comment.id);
     this._updateFilm(film);
   }
 
   _handlePopupCommentSubmit(localComment, film) {
-    const commentAfterCreate = Object.assign(
-        {
-          id: nanoid(),
-          author: `example author`,
-        },
-        localComment
-    );
-
-    film.comments.push(commentAfterCreate);
-    this._updateFilm(film);
-    this._popupComponent.updateDataWithSavingScrollPosition(film);
-  }
-
-  _updateFilm(film) {
-    this._changeFilmData(
-        UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS,
-        film
-    );
+    this._api.createComment(film.id, localComment)
+      .then((response) => {
+        film.comments = response.comments;
+        this._updateFilm(film);
+      })
+      .then(() => {
+        this._popupComponent.updateDataWithSavingScrollPosition(film);
+      });
   }
 
   _handlePopupCommentDelete(commentId, film) {
@@ -76,9 +64,24 @@ export default class Popup {
       throw new Error(`Can't delete unexisting comment`);
     }
 
-    film.comments.splice(index, 1);
-    this._updateFilm(film);
-    this._popupComponent.updateDataWithSavingScrollPosition(film);
+    this._api.deleteComment(commentId)
+      .then(() => {
+        film.comments.splice(index, 1);
+        this._updateFilm(film);
+      })
+      .then(() => {
+        this._popupComponent.updateDataWithSavingScrollPosition(film);
+      });
+  }
+
+  _updateFilm(film) {
+    let updatedFilm = Object.assign({}, film);
+    updatedFilm.comments = updatedFilm.comments.map((comment) => comment.id);
+
+    this._changeFilmData(
+        UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS,
+        updatedFilm
+    );
   }
 
   _handlePopupClose() {
