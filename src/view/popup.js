@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
 import he from "he";
 
-const createPopupTemplate = ({title, alternativeTitle, director, writers, actors, releaseDate, comments, runtime, country, genre, ageRating, poster, description, totalRating, watchList, alreadyWatched, favorite, emotionSelected = null, newComment = null}) => {
+const createPopupTemplate = ({title, alternativeTitle, director, writers, actors, releaseDate, comments, runtime, country, genre, ageRating, poster, description, totalRating, watchList, alreadyWatched, favorite, emotionSelected = null, newComment = null, isDisabled = false}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -84,7 +84,7 @@ const createPopupTemplate = ({title, alternativeTitle, director, writers, actors
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label">${createPopupElement(emotionSelected, PopupEmotionView)}</div>
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ``}</textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? `disabled` : ``}>${newComment ? newComment : ``}</textarea>
               </label>
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
@@ -128,6 +128,17 @@ export default class Popup extends SmartView {
 
   setFilm(film) {
     this._data = film;
+
+    this._data.comments.forEach((comment, index, array) => {
+      array[index] = Object.assign(
+          {},
+          comment,
+          {
+            isDisabled: false
+          }
+      );
+    });
+
     this._setInnerHandlers();
   }
 
@@ -203,9 +214,8 @@ export default class Popup extends SmartView {
           date: dayjs()
         };
 
-        this._resetNewComment();
-
         this._callback.submitComment(localComment, Popup.parseDataToFilm(this._data));
+        // this.resetNewComment();
       }
     }
   }
@@ -226,11 +236,12 @@ export default class Popup extends SmartView {
     this._scrollTop = this.getElement().scrollTop;
   }
 
-  _resetNewComment(justDataUpdating = true) {
+  resetNewComment(justDataUpdating = true) {
     this.updateData(
         {
           emotionSelected: null,
-          newComment: null
+          newComment: null,
+          isDisabled: false,
         },
         justDataUpdating
     );
@@ -277,7 +288,7 @@ export default class Popup extends SmartView {
 
   _popupCloseHandler(evt) {
     evt.preventDefault();
-    this._resetNewComment();
+    this.resetNewComment();
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     document.removeEventListener(`keydown`, this._commentSubmitHandler);
@@ -336,6 +347,7 @@ export default class Popup extends SmartView {
 
     delete data.emotionSelected;
     delete data.newComment;
+    delete data.isDisabled;
 
     return data;
   }

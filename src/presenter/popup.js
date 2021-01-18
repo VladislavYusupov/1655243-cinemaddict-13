@@ -47,14 +47,25 @@ export default class Popup {
   }
 
   _handlePopupCommentSubmit(localComment, film) {
+    this.setSaving();
+
     this._api.createComment(film.id, localComment)
       .then((response) => {
         film.comments = response.comments;
         this._updateFilm(film);
       })
       .then(() => {
+        this._popupComponent.resetNewComment();
         this._popupComponent.updateDataWithSavingScrollPosition(film);
       });
+  }
+
+  setSaving() {
+    this._popupComponent.updateDataWithSavingScrollPosition(
+        {
+          isDisabled: true
+        }
+    );
   }
 
   _handlePopupCommentDelete(commentId, film) {
@@ -63,6 +74,9 @@ export default class Popup {
     if (index === -1) {
       throw new Error(`Can't delete unexisting comment`);
     }
+
+    film.comments[index].isDisabled = true;
+    this._popupComponent.updateDataWithSavingScrollPosition(film);
 
     this._api.deleteComment(commentId)
       .then(() => {
