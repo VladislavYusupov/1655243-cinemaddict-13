@@ -57,6 +57,9 @@ export default class Popup {
       .then(() => {
         this._popupComponent.resetNewComment();
         this._popupComponent.updateDataWithSavingScrollPosition(film);
+      })
+      .catch(() => {
+        this._popupComponent.shake(() => this._popupComponent.updateDataWithSavingScrollPosition({isDisabled: false}));
       });
   }
 
@@ -69,6 +72,8 @@ export default class Popup {
   }
 
   _handlePopupCommentDelete(commentId, film) {
+    const unchangedComments = [...film.comments];
+
     const index = film.comments.findIndex((comment) => comment.id === commentId);
 
     if (index === -1) {
@@ -85,6 +90,11 @@ export default class Popup {
       })
       .then(() => {
         this._popupComponent.updateDataWithSavingScrollPosition(film);
+      })
+      .catch(() => {
+        film.comments = unchangedComments;
+        film.comments[index].isDisabled = false;
+        this._popupComponent.shake(() => this._popupComponent.updateDataWithSavingScrollPosition(film));
       });
   }
 

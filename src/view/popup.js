@@ -215,7 +215,6 @@ export default class Popup extends SmartView {
         };
 
         this._callback.submitComment(localComment, Popup.parseDataToFilm(this._data));
-        // this.resetNewComment();
       }
     }
   }
