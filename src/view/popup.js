@@ -59,7 +59,7 @@ const createPopupTemplate = ({title, alternativeTitle, director, writers, actors
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${genre.length === 1 ? `Genre` : `Genres`}</td>
                   <td class="film-details__cell">${createPopupElements(genre, PopupGenreView)}</td>
                 </tr>
               </table>
