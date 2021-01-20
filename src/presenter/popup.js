@@ -37,6 +37,7 @@ export default class Popup {
         this._film.comments = this._commentsModel.getComments();
 
         if (isNewFilm) {
+          this._popupComponent.resetNewComment();
           this._popupComponent.updateDataWithSavingScrollPosition(this._film);
         }
 
