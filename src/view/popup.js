@@ -262,9 +262,12 @@ export default class Popup extends SmartView {
   _markAsWatchedChangeHandler(evt) {
     evt.preventDefault();
 
+    const alreadyWatched = !this._data.alreadyWatched;
+
     this.updateData(
         {
-          alreadyWatched: !this._data.alreadyWatched
+          alreadyWatched,
+          watchingDate: alreadyWatched ? new Date(Date.now()) : null,
         },
         true
     );

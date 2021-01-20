@@ -63,6 +63,7 @@ export default class Film {
 
   _handleMarkAsWatchedClick() {
     const updateType = this._film.alreadyWatched ? UpdateType.RERENDER_WITH_CURRENT_PRESENTER_SETTINGS : UpdateType.RERENDER_SINGLE_LIST_ITEM;
+    const alreadyWatched = !this._film.alreadyWatched;
 
     this._changeFilmData(
         updateType,
@@ -70,7 +71,8 @@ export default class Film {
             {},
             this._film,
             {
-              alreadyWatched: !this._film.alreadyWatched
+              alreadyWatched,
+              watchingDate: alreadyWatched ? new Date(Date.now()) : null,
             }
         )
     );
