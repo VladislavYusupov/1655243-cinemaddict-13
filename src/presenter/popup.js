@@ -9,6 +9,7 @@ export default class Popup {
     this._api = api;
 
     this._commentsModel = null;
+    this._film = null;
 
     this._handlePopupCommentSubmit = this._handlePopupCommentSubmit.bind(this);
     this._handlePopupCommentDelete = this._handlePopupCommentDelete.bind(this);
@@ -17,6 +18,11 @@ export default class Popup {
   }
 
   init(film) {
+    if (this._film === film) {
+      return;
+    }
+
+    const isNewFilm = this._film !== null && this._film !== film;
     this._film = film;
 
     this._commentsModel = new CommentsModel();
@@ -29,6 +35,11 @@ export default class Popup {
       })
       .then(() => {
         this._film.comments = this._commentsModel.getComments();
+
+        if (isNewFilm) {
+          this._popupComponent.updateDataWithSavingScrollPosition(this._film);
+        }
+
         this._popupComponent.setFilm(this._film);
 
         this._popupComponent.setPopupCloseHandler(this._handlePopupClose);
@@ -37,6 +48,7 @@ export default class Popup {
         this._popupComponent.setFavoriteChangeHandler(this._handleDataAfterClick);
         this._popupComponent.setCommentSubmitHandler(this._handlePopupCommentSubmit);
         this._popupComponent.setCommentDeleteHandler(this._handlePopupCommentDelete);
+
         document.body.appendChild(this._popupComponent.getElement());
         document.body.classList.add(`hide-overflow`);
       });
@@ -112,5 +124,6 @@ export default class Popup {
     document.body.classList.remove(`hide-overflow`);
     remove(this._popupComponent);
     this._commentsModel.clearComments();
+    this._film = null;
   }
 }
