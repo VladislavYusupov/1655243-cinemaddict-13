@@ -247,15 +247,19 @@ export default class Films {
   }
 
   _renderTopRatedFilms(films) {
-    if (films.every((film) => film.totalRating !== 0)) {
-      this._renderExtraFilms(this._topRatedFilmListComponent, ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
+    if (films.every((film) => film.totalRating === 0)) {
+      return;
     }
+
+    this._renderExtraFilms(this._topRatedFilmListComponent, ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
   }
 
   _renderMostCommentedFilms(films) {
-    if (films.every((film) => film.comments.length !== 0)) {
-      this._renderExtraFilms(this._mostCommentedFilmListComponent, ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
+    if (films.every((film) => film.comments.length === 0)) {
+      return;
     }
+
+    this._renderExtraFilms(this._mostCommentedFilmListComponent, ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
   }
 
   _renderSortAndFilms() {
