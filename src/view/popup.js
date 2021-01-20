@@ -202,7 +202,7 @@ export default class Popup extends SmartView {
   }
 
   _commentSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === `Enter`) {
+    if (evt.ctrlKey && evt.key === `Enter` && !this._data.isDisabled) {
       evt.preventDefault();
       const comment = this._data.newComment;
       const emotion = this._data.emotionSelected;
@@ -328,9 +328,11 @@ export default class Popup extends SmartView {
         return;
       }
 
-      this.updateDataWithSavingScrollPosition({
-        emotionSelected: emotionSelectedValue
-      });
+      if (!this._data.isDisabled) {
+        this.updateDataWithSavingScrollPosition({
+          emotionSelected: emotionSelectedValue
+        });
+      }
     }
   }
 
