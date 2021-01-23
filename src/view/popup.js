@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import getFormattedFilmRuntime from "../getFormattedFilmRuntime";
 import he from "he";
 
-const createPopupTemplate = ({title, alternativeTitle, director, writers, actors, releaseDate, comments, runtime, country, genre, ageRating, poster, description, totalRating, watchList, alreadyWatched, favorite, emotionSelected = null, newComment = null}) => {
+const createPopupTemplate = ({title, alternativeTitle, director, writers, actors, releaseDate, comments, runtime, country, genre, ageRating, poster, description, totalRating, watchList, alreadyWatched, favorite, emotionSelected = null, newComment = null, isDisabled = false}) => {
   return `
     <section class="film-details">
       <form class="film-details__inner" action="" method="get">
@@ -59,7 +59,7 @@ const createPopupTemplate = ({title, alternativeTitle, director, writers, actors
                   <td class="film-details__cell">${country}</td>
                 </tr>
                 <tr class="film-details__row">
-                  <td class="film-details__term">Genres</td>
+                  <td class="film-details__term">${genre.length === 1 ? `Genre` : `Genres`}</td>
                   <td class="film-details__cell">${createPopupElements(genre, PopupGenreView)}</td>
                 </tr>
               </table>
@@ -84,7 +84,7 @@ const createPopupTemplate = ({title, alternativeTitle, director, writers, actors
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label">${createPopupElement(emotionSelected, PopupEmotionView)}</div>
               <label class="film-details__comment-label">
-                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${newComment ? newComment : ``}</textarea>
+                <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment" ${isDisabled ? `disabled` : ``}>${newComment ? newComment : ``}</textarea>
               </label>
               <div class="film-details__emoji-list">
                 <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
@@ -128,6 +128,17 @@ export default class Popup extends SmartView {
 
   setFilm(film) {
     this._data = film;
+
+    this._data.comments.forEach((comment, index, array) => {
+      array[index] = Object.assign(
+          {},
+          comment,
+          {
+            isDisabled: false
+          }
+      );
+    });
+
     this._setInnerHandlers();
   }
 
@@ -191,7 +202,7 @@ export default class Popup extends SmartView {
   }
 
   _commentSubmitHandler(evt) {
-    if (evt.ctrlKey && evt.key === `Enter`) {
+    if (evt.ctrlKey && evt.key === `Enter` && !this._data.isDisabled) {
       evt.preventDefault();
       const comment = this._data.newComment;
       const emotion = this._data.emotionSelected;
@@ -202,8 +213,6 @@ export default class Popup extends SmartView {
           emotion,
           date: dayjs()
         };
-
-        this._resetNewComment();
 
         this._callback.submitComment(localComment, Popup.parseDataToFilm(this._data));
       }
@@ -226,11 +235,12 @@ export default class Popup extends SmartView {
     this._scrollTop = this.getElement().scrollTop;
   }
 
-  _resetNewComment(justDataUpdating = true) {
+  resetNewComment(justDataUpdating = true) {
     this.updateData(
         {
           emotionSelected: null,
-          newComment: null
+          newComment: null,
+          isDisabled: false,
         },
         justDataUpdating
     );
@@ -252,9 +262,12 @@ export default class Popup extends SmartView {
   _markAsWatchedChangeHandler(evt) {
     evt.preventDefault();
 
+    const alreadyWatched = !this._data.alreadyWatched;
+
     this.updateData(
         {
-          alreadyWatched: !this._data.alreadyWatched
+          alreadyWatched,
+          watchingDate: alreadyWatched ? new Date() : null,
         },
         true
     );
@@ -277,7 +290,7 @@ export default class Popup extends SmartView {
 
   _popupCloseHandler(evt) {
     evt.preventDefault();
-    this._resetNewComment();
+    this.resetNewComment();
 
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     document.removeEventListener(`keydown`, this._commentSubmitHandler);
@@ -315,9 +328,11 @@ export default class Popup extends SmartView {
         return;
       }
 
-      this.updateDataWithSavingScrollPosition({
-        emotionSelected: emotionSelectedValue
-      });
+      if (!this._data.isDisabled) {
+        this.updateDataWithSavingScrollPosition({
+          emotionSelected: emotionSelectedValue
+        });
+      }
     }
   }
 
@@ -336,6 +351,7 @@ export default class Popup extends SmartView {
 
     delete data.emotionSelected;
     delete data.newComment;
+    delete data.isDisabled;
 
     return data;
   }
