@@ -1,7 +1,7 @@
 const getFormattedTotalDuration = (totalDuration) => {
-  const minutesPerHour = 60;
-  const totalHours = Math.floor(totalDuration / minutesPerHour);
-  const totalMinutes = totalDuration - totalHours * minutesPerHour;
+  const MINUTES_PER_HOUR = 60;
+  const totalHours = Math.floor(totalDuration / MINUTES_PER_HOUR);
+  const totalMinutes = totalDuration - totalHours * MINUTES_PER_HOUR;
 
   return {
     totalHours,
