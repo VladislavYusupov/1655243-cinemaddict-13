@@ -4,6 +4,7 @@ import FilmListView from "../view/film-list";
 import FilmListContainerView from "../view/film-list-container";
 import PopupView from "../view/popup";
 import SortView from "../view/sort";
+import LoadingView from "../view/loading";
 import EmptyFilmsView from "../view/empty-films";
 import ExtraFilmsListView from "../view/extra-films-list";
 import ShowMoreButtonView from "../view/show-more-button";
@@ -22,16 +23,18 @@ const ExtraFilmName = {
 };
 
 export default class Films {
-  constructor(filmsContainer, filmsModel, filterModel, statsModel) {
+  constructor(filmsContainer, filmsModel, filterModel, statsModel, api) {
     this._filmsContainer = filmsContainer;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
     this._statsModel = statsModel;
+    this._api = api;
     this._renderedFilmsCount = MAX_FILMS_PER_LINE;
     this._currentSortType = SortType.DEFAULT;
 
     this._sortComponent = null;
     this._showMoreButtonComponent = null;
+    this._isLoading = true;
 
     this._filmsComponent = new FilmsView();
     this._filmListComponent = new FilmListView();
@@ -39,6 +42,7 @@ export default class Films {
     this._emptyFilmsComponent = new EmptyFilmsView();
     this._topRatedFilmListComponent = new ExtraFilmsListView(ExtraFilmName.TOP_RATED);
     this._mostCommentedFilmListComponent = new ExtraFilmsListView(ExtraFilmName.MOST_COMMENTED);
+    this._loadingComponent = new LoadingView();
 
     this._filmPresentersMap = new Map();
     this._topRatedFilmPresentersMap = new Map();
@@ -52,7 +56,7 @@ export default class Films {
   }
 
   init() {
-    this._popupPresenter = new PopupPresenter(new PopupView(), this._handleViewAction);
+    this._popupPresenter = new PopupPresenter(new PopupView(), this._handleViewAction, this._api);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
@@ -80,7 +84,10 @@ export default class Films {
   }
 
   _handleViewAction(updateType, update) {
-    this._filmsModel.updateFilm(updateType, update);
+    this._api.updateFilm(update)
+      .then((response) => {
+        this._filmsModel.updateFilm(updateType, response);
+      });
   }
 
   _handleModelEvent(updateType, data) {
@@ -104,7 +111,11 @@ export default class Films {
         } else {
           this.show();
         }
-
+        break;
+      case UpdateType.LOAD_FILMS:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderSortAndFilms();
         break;
     }
   }
@@ -128,6 +139,10 @@ export default class Films {
     this._sortComponent.setClickHandler(this._handleSortTypeChange);
 
     render(this._filmsComponent, this._sortComponent);
+  }
+
+  _renderLoading() {
+    render(this._filmsComponent, this._loadingComponent);
   }
 
   _renderFilms(films) {
@@ -209,6 +224,7 @@ export default class Films {
     this._filmPresentersMap.forEach((presenter) => presenter.destroy());
     this._filmPresentersMap.clear();
 
+    remove(this._loadingComponent);
     remove(this._sortComponent);
     remove(this._filmListComponent);
     remove(this._filmListContainerComponent);
@@ -230,7 +246,28 @@ export default class Films {
     render(this._filmsComponent, this._emptyFilmsComponent);
   }
 
+  _renderTopRatedFilms(films) {
+    if (films.every((film) => film.totalRating === 0)) {
+      return;
+    }
+
+    this._renderExtraFilms(this._topRatedFilmListComponent, ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
+  }
+
+  _renderMostCommentedFilms(films) {
+    if (films.every((film) => film.comments.length === 0)) {
+      return;
+    }
+
+    this._renderExtraFilms(this._mostCommentedFilmListComponent, ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
+  }
+
   _renderSortAndFilms() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const films = this._getFilms();
     const filmsCount = films.length;
 
@@ -249,8 +286,8 @@ export default class Films {
       this._renderShowMoreButton();
     }
 
-    this._renderExtraFilms(this._topRatedFilmListComponent, ExtraFilmName.TOP_RATED, this._getTopRatedFilms(films));
-    this._renderExtraFilms(this._mostCommentedFilmListComponent, ExtraFilmName.MOST_COMMENTED, this._getMostCommentedFilms(films));
+    this._renderTopRatedFilms(films);
+    this._renderMostCommentedFilms(films);
   }
 
   show() {

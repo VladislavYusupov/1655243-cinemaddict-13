@@ -28,13 +28,14 @@ const getFilmsByDateRange = (films, statisticsType) => {
   }
 };
 
-const getFilmStatistics = (films) => {
+const getFilmStatistics = (films, statisticsType) => {
   const watched = getWatchedFilms(films);
+  const watchedInRange = getFilmsByDateRange(watched, statisticsType);
 
   return {
-    watched,
-    totalDuration: watched.reduce((acc, current) => acc + current.runtime, 0),
-    topGenre: getTopGenre(watched),
+    watched: watchedInRange,
+    totalDuration: watchedInRange.reduce((acc, current) => acc + current.runtime, 0),
+    topGenre: getTopGenre(watchedInRange),
   };
 };
 
@@ -42,7 +43,7 @@ export const getSortedFilmsByGenres = (films) => {
   const filmCountByGenres = {};
 
   films.forEach((film) =>
-    film.genres.forEach((genre) => {
+    film.genre.forEach((genre) => {
       if (genre in filmCountByGenres) {
         filmCountByGenres[genre] += 1;
       } else {
@@ -61,9 +62,9 @@ export const getSortedFilmsByGenres = (films) => {
 };
 
 export const statistics = {
-  [StatisticsType.ALL_TIME]: (films) => getFilmStatistics(films),
-  [StatisticsType.TODAY]: (films) => getFilmStatistics(getFilmsByDateRange(films, StatisticsType.TODAY)),
-  [StatisticsType.WEEK]: (films) => getFilmStatistics(getFilmsByDateRange(films, StatisticsType.WEEK)),
-  [StatisticsType.MONTH]: (films) => getFilmStatistics(getFilmsByDateRange(films, StatisticsType.MONTH)),
-  [StatisticsType.YEAR]: (films) => getFilmStatistics(getFilmsByDateRange(films, StatisticsType.YEAR)),
+  [StatisticsType.ALL_TIME]: (films) => getFilmStatistics(films, StatisticsType.ALL_TIME),
+  [StatisticsType.TODAY]: (films) => getFilmStatistics(films, StatisticsType.TODAY),
+  [StatisticsType.WEEK]: (films) => getFilmStatistics(films, StatisticsType.WEEK),
+  [StatisticsType.MONTH]: (films) => getFilmStatistics(films, StatisticsType.MONTH),
+  [StatisticsType.YEAR]: (films) => getFilmStatistics(films, StatisticsType.YEAR),
 };
