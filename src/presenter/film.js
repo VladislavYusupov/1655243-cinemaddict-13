@@ -72,7 +72,7 @@ export default class Film {
             this._film,
             {
               alreadyWatched,
-              watchingDate: alreadyWatched ? new Date(Date.now()) : null,
+              watchingDate: alreadyWatched ? new Date() : null,
             }
         )
     );

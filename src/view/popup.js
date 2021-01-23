@@ -267,7 +267,7 @@ export default class Popup extends SmartView {
     this.updateData(
         {
           alreadyWatched,
-          watchingDate: alreadyWatched ? new Date(Date.now()) : null,
+          watchingDate: alreadyWatched ? new Date() : null,
         },
         true
     );

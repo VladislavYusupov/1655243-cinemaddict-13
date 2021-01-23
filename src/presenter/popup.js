@@ -22,7 +22,7 @@ export default class Popup {
       return;
     }
 
-    const isNewFilm = this._film !== null && this._film !== film;
+    const isNewFilm = this._film !== null;
     this._film = film;
 
     this._commentsModel = new CommentsModel();
