@@ -28,11 +28,16 @@ export const StatisticsType = {
   YEAR: `year`,
 };
 
+const MOVIE_BUFF_RANK_KEY = 21;
+const FAN_RANK_KEY = 11;
+const NOVICE_RANK_KEY = 1;
+const EMPTY_RANK_KEY = 0;
+
 export const USER_RANKS = {
-  21: `movie buff`,
-  11: `fan`,
-  1: `novice`,
-  0: false,
+  [MOVIE_BUFF_RANK_KEY]: `movie buff`,
+  [FAN_RANK_KEY]: `fan`,
+  [NOVICE_RANK_KEY]: `novice`,
+  [EMPTY_RANK_KEY]: false,
 };
 
 export const FILM_RELEASE_DATE_FORMAT = `D MMMM YYYY`;
