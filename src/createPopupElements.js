@@ -1,7 +1,7 @@
 import createPopupElement from "./createPopupElement";
 
 const createPopupElements = (elements, View) => {
-  let elementTemplates = [];
+  const elementTemplates = [];
 
   for (const element of elements) {
     const elementTemplate = createPopupElement(element, View);
